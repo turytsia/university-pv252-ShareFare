@@ -1,0 +1,203 @@
+/* Modal overlay - covers the entire screen */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+/* Feedback modal container */
+.feedback-modal {
+    background: white;
+    border-radius: 16px;
+    max-width: 540px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Modal header */
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.close-btn:hover {
+    background: var(--gray-200);
+    color: var(--gray-900);
+}
+
+/* Modal body */
+.modal-body {
+    padding: 1.5rem;
+}
+
+.feedback-intro {
+    font-size: 0.9375rem;
+    color: var(--gray-700);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.5;
+}
+
+/* Rating group */
+.rating-group {
+    margin-bottom: 1.5rem;
+}
+
+.rating-label {
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 0.75rem;
+}
+
+.stars {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.star-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    transition: all 0.2s;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.star-btn:hover {
+    background: var(--gray-200);
+    transform: scale(1.05);
+}
+
+.star-btn.active {
+    background: var(--warning-amber);
+    color: white;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    color: var(--gray-900);
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+}
+
+.form-group textarea:focus {
+    border-color: var(--primary-green-600);
+    outline: none;
+}
+
+.form-group textarea::placeholder {
+    color: var(--gray-400);
+}
+
+/* Modal actions */
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.cancel-btn,
+.submit-btn {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: white;
+    border: 1px solid var(--gray-300);
+    color: var(--gray-700);
+}
+
+.cancel-btn:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
+}
+
+.submit-btn {
+    background: var(--primary-green-600);
+    color: white;
+    border: none;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: var(--primary-green-700);
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .stars {
+        gap: 0.25rem;
+    }
+    
+    .star-btn {
+        width: 36px;
+        height: 36px;
+    }
+}
