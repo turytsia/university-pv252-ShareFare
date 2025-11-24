@@ -219,7 +219,7 @@ export const mockMessages: Message[] = [
     itemId: 'item-5',
     item: mockFoodItems[4],
     otherUser: users[2],
-    lastMessage: 'Thank you so much! See you then.',
+    lastMessage: 'Yes.',
     timestamp: '1h ago',
     unreadCount: 0,
     status: 'pending',
@@ -240,7 +240,7 @@ export const mockMessages: Message[] = [
       {
         id: 'chat-6',
         senderId: 'user-3',
-        text: 'Thank you so much! See you then.',
+        text: 'Yes.',
         timestamp: '9:22 AM',
       },
     ],

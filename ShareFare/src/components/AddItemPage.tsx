@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { ArrowLeft, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import type { FoodItem } from '../types';
 import './AddItemPage.css';
 
-export default function AddItemPage() {
+interface AddItemPageProps {
+  onAddItem: (item: Omit<FoodItem, 'id' | 'listedBy'>) => void;
+}
+
+export default function AddItemPage({ onAddItem }: AddItemPageProps) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
@@ -14,8 +19,23 @@ export default function AddItemPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    alert('Item listed successfully!');
+    
+    // Create the new item (without id and listedBy, which will be set in App.tsx)
+    const newItem: Omit<FoodItem, 'id' | 'listedBy'> = {
+      title: formData.title,
+      description: formData.description,
+      quantity: formData.quantity,
+      category: formData.category as FoodItem['category'],
+      image: 'https://images.unsplash.com/photo-1495195134817-aeb325a55b65?w=500&q=80', // Default placeholder image
+      dietaryTags: [],
+      bestBy: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), // 7 days from now
+      pickupWindow: 'Flexible schedule',
+      location: '0.0 mi away',
+      distance: 0,
+      status: 'available',
+    };
+    
+    onAddItem(newItem);
     navigate('/');
   };
 
@@ -103,7 +123,7 @@ export default function AddItemPage() {
             Cancel
           </button>
           <button type="submit" className="submit-btn">
-            List Item
+            Add Item
           </button>
         </div>
       </form>

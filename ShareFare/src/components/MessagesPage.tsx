@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Send } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { Message as MessageType } from '../types';
 import ConfirmModal from './ConfirmModal';
 import FeedbackModal from './FeedbackModal';
@@ -8,7 +9,6 @@ import './MessagesPage.css';
 
 interface MessagesPageProps {
   messages: MessageType[];
-  onBack: () => void;
   onSendMessage: (messageId: string, text: string) => void;
   onCompletePickup: (messageId: string) => void;
   onSubmitOwnerFeedback: (messageId: string, feedback: {
@@ -25,13 +25,34 @@ interface MessagesPageProps {
 
 export default function MessagesPage({ 
   messages, 
-  onBack, 
   onSendMessage,
   onCompletePickup,
   onSubmitOwnerFeedback,
   onSubmitClaimerFeedback
 }: MessagesPageProps) {
-  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Initialize selectedMessageId based on URL param
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(() => {
+    const itemId = searchParams.get('itemId');
+    if (itemId && messages.length > 0) {
+      const message = messages.find(m => m.itemId === itemId);
+      return message?.id || null;
+    }
+    return null;
+  });
+
+  // Clear the itemId param from URL after initial load if it was used
+  useEffect(() => {
+    const itemId = searchParams.get('itemId');
+    if (itemId) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('itemId');
+      setSearchParams(newParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
   const [messageText, setMessageText] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showOwnerFeedbackModal, setShowOwnerFeedbackModal] = useState(false);
@@ -85,7 +106,7 @@ export default function MessagesPage({
       {!selectedMessage ? (
         <div className="messages-list">
           <div className="messages-header">
-            <button className="back-btn" onClick={onBack}>
+            <button className="back-btn" onClick={() => navigate('/')}>
               <ArrowLeft size={20} />
             </button>
             <h2>Messages</h2>
@@ -146,7 +167,12 @@ export default function MessagesPage({
                   Complete Pickup
                 </button>
               )}
-              <button className="view-item-btn">View Item</button>
+              <button 
+                className="view-item-btn"
+                onClick={() => navigate(`/item/${selectedMessage.item.id}`)}
+              >
+                View Item
+              </button>
             </div>
           </div>
 

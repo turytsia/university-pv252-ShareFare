@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './components/HomePage';
 import ProfilePage from './components/ProfilePage';
 import AddItemPage from './components/AddItemPage';
+import ViewItemPage from './components/ViewItemPage';
 import LoginPage from './components/LoginPage';
 import MessagesPage from './components/MessagesPage';
 import ItemDetailsModal from './components/ItemDetailsModal';
@@ -16,12 +17,46 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [items, setItems] = useState<FoodItem[]>(mockFoodItems);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
-  const [showMessages, setShowMessages] = useState(false);
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+  };
+
+  const handleAddItem = (newItem: Omit<FoodItem, 'id' | 'listedBy'>) => {
+    const itemWithId: FoodItem = {
+      ...newItem,
+      id: `item-${Date.now()}`,
+      listedBy: currentUser,
+    };
+    
+    setItems((prevItems) => [itemWithId, ...prevItems]);
+    
+    setToast({
+      message: `Successfully listed "${itemWithId.title}"!`,
+      type: 'success',
+    });
+  };
+
+  const handleMarkAsClaimed = (itemId: string) => {
+    const item = items.find(i => i.id === itemId);
+    if (!item) return;
+
+    // Update item status to claimed
+    setItems((prevItems) =>
+      prevItems.map((i) =>
+        i.id === itemId
+          ? { ...i, status: 'claimed' as const }
+          : i
+      )
+    );
+
+    // Show success toast
+    setToast({
+      message: `"${item.title}" has been marked as claimed.`,
+      type: 'success',
+    });
   };
 
   const handleClaimItem = (itemId: string) => {
@@ -75,9 +110,35 @@ function App() {
     });
   };
 
-  const handleContactUser = (userId: string) => {
-    alert(`Opening chat with user ${userId}`);
-    setShowMessages(true);
+  const handleContactUser = (userId: string, itemId?: string) => {
+    // If itemId is provided, find or create a message for this item
+    if (itemId) {
+      const item = items.find(i => i.id === itemId);
+      if (item) {
+        // Check if a conversation already exists for this item
+        const existingMessage = messages.find(
+          (m) => m.itemId === itemId && m.otherUser.id === userId
+        );
+
+        if (!existingMessage) {
+          // Create a new message conversation
+          const newMessage: Message = {
+            id: `msg-${Date.now()}`,
+            itemId: item.id,
+            item: item,
+            otherUser: item.listedBy,
+            lastMessage: '',
+            timestamp: 'Just now',
+            unreadCount: 0,
+            status: 'pending',
+            isOwner: false,
+            messages: [],
+          };
+          setMessages((prev) => [newMessage, ...prev]);
+        }
+      }
+    }
+    // Navigation to messages will be handled by the component
   };
 
   const handleSendMessage = (messageId: string, text: string) => {
@@ -215,62 +276,129 @@ function App() {
     return <LoginPage onLogin={handleLogin} />;
   }
 
-  if (showMessages) {
-    return (
-      <MessagesPage
-        messages={messages}
-        onBack={() => setShowMessages(false)}
-        onSendMessage={handleSendMessage}
-        onCompletePickup={handleCompletePickup}
-        onSubmitOwnerFeedback={handleSubmitOwnerFeedback}
-        onSubmitClaimerFeedback={handleSubmitClaimerFeedback}
-      />
-    );
-  }
-
   return (
     <BrowserRouter>
-      <div className="app">
-        <Header onOpenMessages={() => setShowMessages(true)} unreadCount={unreadCount} />
-        <main className="main-content">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <HomePage
-                  items={items}
-                  onClaimItem={handleClaimItem}
-                  onViewItem={setSelectedItem}
-                />
-              }
-            />
-            <Route
-              path="/profile"
-              element={<ProfilePage user={currentUser} userItems={userItems} />}
-            />
-            <Route path="/add-item" element={<AddItemPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-
-        {selectedItem && (
-          <ItemDetailsModal
-            item={selectedItem}
-            onClose={() => setSelectedItem(null)}
-            onClaim={handleClaimItem}
-            onContact={handleContactUser}
-          />
-        )}
-
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </div>
+      <AppContent
+        items={items}
+        messages={messages}
+        selectedItem={selectedItem}
+        toast={toast}
+        currentUser={currentUser}
+        unreadCount={unreadCount}
+        userItems={userItems}
+        handleAddItem={handleAddItem}
+        handleClaimItem={handleClaimItem}
+        handleMarkAsClaimed={handleMarkAsClaimed}
+        handleContactUser={handleContactUser}
+        handleSendMessage={handleSendMessage}
+        handleCompletePickup={handleCompletePickup}
+        handleSubmitOwnerFeedback={handleSubmitOwnerFeedback}
+        handleSubmitClaimerFeedback={handleSubmitClaimerFeedback}
+        setSelectedItem={setSelectedItem}
+        setToast={setToast}
+      />
     </BrowserRouter>
+  );
+}
+
+interface AppContentProps {
+  items: FoodItem[];
+  messages: Message[];
+  selectedItem: FoodItem | null;
+  toast: { message: string; type: 'success' | 'error' | 'info' } | null;
+  currentUser: typeof import('./mockData').currentUser;
+  unreadCount: number;
+  userItems: FoodItem[];
+  handleAddItem: (newItem: Omit<FoodItem, 'id' | 'listedBy'>) => void;
+  handleClaimItem: (itemId: string) => void;
+  handleMarkAsClaimed: (itemId: string) => void;
+  handleContactUser: (userId: string, itemId?: string) => void;
+  handleSendMessage: (messageId: string, text: string) => void;
+  handleCompletePickup: (messageId: string) => void;
+  handleSubmitOwnerFeedback: (messageId: string, feedback: { responseTime: number; comment: string }) => void;
+  handleSubmitClaimerFeedback: (messageId: string, feedback: { responseTime: number; packagingQuality: number; contentsQuality: number; comment: string }) => void;
+  setSelectedItem: (item: FoodItem | null) => void;
+  setToast: (toast: { message: string; type: 'success' | 'error' | 'info' } | null) => void;
+}
+
+function AppContent({
+  items,
+  messages,
+  selectedItem,
+  toast,
+  currentUser,
+  unreadCount,
+  userItems,
+  handleAddItem,
+  handleClaimItem,
+  handleMarkAsClaimed,
+  handleContactUser,
+  handleSendMessage,
+  handleCompletePickup,
+  handleSubmitOwnerFeedback,
+  handleSubmitClaimerFeedback,
+  setSelectedItem,
+  setToast,
+}: AppContentProps) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="app">
+      <Header onOpenMessages={() => navigate('/messages')} unreadCount={unreadCount} />
+      <main className="main-content">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                items={items}
+                onClaimItem={handleClaimItem}
+                onViewItem={setSelectedItem}
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={<ProfilePage user={currentUser} userItems={userItems} onMarkAsClaimed={handleMarkAsClaimed} />}
+          />
+          <Route path="/add-item" element={<AddItemPage onAddItem={handleAddItem} />} />
+          <Route path="/item/:itemId" element={
+            <ViewItemPage 
+              items={items} 
+              onClaim={handleClaimItem}
+              onContact={handleContactUser}
+            />
+          } />
+          <Route path="/messages" element={
+            <MessagesPage
+              messages={messages}
+              onSendMessage={handleSendMessage}
+              onCompletePickup={handleCompletePickup}
+              onSubmitOwnerFeedback={handleSubmitOwnerFeedback}
+              onSubmitClaimerFeedback={handleSubmitClaimerFeedback}
+            />
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+
+      {selectedItem && (
+        <ItemDetailsModal
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
+          onClaim={handleClaimItem}
+          onContact={handleContactUser}
+        />
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+    </div>
   );
 }
 

@@ -1,14 +1,29 @@
 import { Settings, Package, Heart, TrendingUp, Award, MapPin, Clock, CheckCircle2, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import type { User, FoodItem } from '../types';
 import './ProfilePage.css';
 
 interface ProfilePageProps {
   user: User;
   userItems: FoodItem[];
+  onMarkAsClaimed?: (itemId: string) => void;
 }
 
-export default function ProfilePage({ user, userItems }: ProfilePageProps) {
+export default function ProfilePage({ user, userItems, onMarkAsClaimed }: ProfilePageProps) {
+  const navigate = useNavigate();
   const activeItems = userItems.filter(item => item.status === 'available');
+
+  const handleEdit = (itemId: string) => {
+    // Navigate to the item view page where they can see details
+    // In a real app, this would navigate to an edit page
+    navigate(`/item/${itemId}`);
+  };
+
+  const handleMarkAsClaimed = (itemId: string) => {
+    if (onMarkAsClaimed) {
+      onMarkAsClaimed(itemId);
+    }
+  };
 
   return (
     <div className="profile-page">
@@ -114,8 +129,12 @@ export default function ProfilePage({ user, userItems }: ProfilePageProps) {
                   <span>Best by {item.bestBy}</span>
                 </div>
                 <div className="listing-actions">
-                  <button className="edit-btn">Edit</button>
-                  <button className="mark-claimed-btn">Mark as Claimed</button>
+                  <button className="edit-btn" onClick={() => handleEdit(item.id)}>
+                    Edit
+                  </button>
+                  <button className="mark-claimed-btn" onClick={() => handleMarkAsClaimed(item.id)}>
+                    Mark as Claimed
+                  </button>
                 </div>
               </div>
               <span className="listing-badge available">Available</span>

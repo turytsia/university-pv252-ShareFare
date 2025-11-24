@@ -1,4 +1,5 @@
 import { X, MapPin, Calendar, Clock, CheckCircle2, MessageCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import type { FoodItem } from '../types';
 import './ItemDetailsModal.css';
 
@@ -6,10 +7,19 @@ interface ItemDetailsModalProps {
   item: FoodItem;
   onClose: () => void;
   onClaim: (itemId: string) => void;
-  onContact: (userId: string) => void;
+  onContact: (userId: string, itemId?: string) => void;
 }
 
 export default function ItemDetailsModal({ item, onClose, onClaim, onContact }: ItemDetailsModalProps) {
+  const navigate = useNavigate();
+
+  const handleContact = () => {
+    onContact(item.listedBy.id, item.id);
+    onClose();
+    // Navigate to messages page with itemId to auto-open the chat
+    navigate(`/messages?itemId=${item.id}`);
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="item-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -108,7 +118,7 @@ export default function ItemDetailsModal({ item, onClose, onClaim, onContact }: 
           <div className="item-modal-actions">
             <button 
               className="contact-btn"
-              onClick={() => onContact(item.listedBy.id)}
+              onClick={handleContact}
             >
               <MessageCircle size={20} />
               Contact
