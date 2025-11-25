@@ -1,0 +1,16 @@
+---
+name: ShareFare CI
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install modules
+        working-directory: ShareFare
+        run: npm i
+      - name: Run ESLint
+        working-directory: ShareFare
+        run: npm run lint
