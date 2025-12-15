@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import type { FoodItem } from "../types";
 import "./ItemDetailsModal.css";
+import VerifiedBadge from "./VerifiedBadge";
 
 interface ItemDetailsModalProps {
   item: FoodItem;
@@ -100,9 +101,7 @@ export default function ItemDetailsModal({
               <div className="user-card-info">
                 <div className="user-card-name">
                   {item.listedBy.name}
-                  {item.listedBy.verified && (
-                    <CheckCircle2 size={16} className="verified-icon" />
-                  )}
+                  {item.listedBy.verified && VerifiedBadge({ size: 16 })}
                 </div>
                 <div className="user-card-location">
                   {item.listedBy.location}

@@ -215,10 +215,6 @@
   margin: 0;
 }
 
-.verified-icon {
-  color: #10b981;
-}
-
 .user-location {
   display: flex;
   align-items: center;

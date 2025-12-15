@@ -159,11 +159,6 @@
   margin-bottom: 4px;
 }
 
-.verified-icon {
-  color: var(--trust-blue);
-  flex-shrink: 0;
-}
-
 .user-stats {
   display: flex;
   align-items: center;

@@ -1,6 +1,7 @@
 import { MapPin, Calendar, Clock, CheckCircle2 } from "lucide-react";
 import type { FoodItem } from "../types";
 import "./FoodCard.css";
+import VerifiedBadge from "./VerifiedBadge";
 
 interface FoodCardProps {
   item: FoodItem;
@@ -51,9 +52,7 @@ export default function FoodCard({ item, onClaim, onView }: FoodCardProps) {
             <div className="user-details">
               <div className="user-name">
                 {item.listedBy.name}
-                {item.listedBy.verified && (
-                  <CheckCircle2 size={14} className="verified-icon" />
-                )}
+                {item.listedBy.verified && VerifiedBadge({ size: 14 })}
               </div>
               <div className="user-stats">
                 <span className="completion-rate">

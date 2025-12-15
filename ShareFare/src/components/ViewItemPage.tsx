@@ -11,6 +11,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import type { FoodItem } from "../types";
 import "./ViewItemPage.css";
+import VerifiedBadge from "./VerifiedBadge";
 
 interface ViewItemPageProps {
   items: FoodItem[];
@@ -161,9 +162,7 @@ export default function ViewItemPage({
             <div className="user-details">
               <div className="user-name-row">
                 <h4>{item.listedBy.name}</h4>
-                {item.listedBy.verified && (
-                  <CheckCircle size={16} className="verified-icon" />
-                )}
+                {item.listedBy.verified && VerifiedBadge({ size: 16 })}
               </div>
               <p className="user-location">
                 <MapPin size={14} />
