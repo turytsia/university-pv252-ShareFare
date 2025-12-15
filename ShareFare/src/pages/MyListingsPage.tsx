@@ -6,7 +6,7 @@ import FoodCard from "../components/FoodCard.tsx";
 import FilterModal from "../components/FilterModal.tsx";
 import "./HomePage.css";
 
-interface MyOfferingsPageProps {
+interface MyListingsPageProps {
   items: FoodItem[];
   onViewItem: (item: FoodItem) => void;
 }
@@ -21,10 +21,7 @@ const categories: CategoryFilter[] = [
   "Other",
 ];
 
-export default function MyOfferingsPage({
-  items,
-  onViewItem,
-}: MyOfferingsPageProps) {
+export default function MyListingsPage({ items }: MyListingsPageProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
@@ -132,5 +129,3 @@ export default function MyOfferingsPage({
     </div>
   );
 }
-
-
