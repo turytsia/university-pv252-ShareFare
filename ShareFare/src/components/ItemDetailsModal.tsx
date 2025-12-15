@@ -5,6 +5,7 @@ import {
   Clock,
   CheckCircle2,
   MessageCircle,
+  Check,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { FoodItem } from "../types";
@@ -108,12 +109,15 @@ export default function ItemDetailsModal({
                 </div>
                 <div className="user-card-stats">
                   <span className="stat-item">
-                    <span className="stat-icon">✓</span>
+                    <span className="stat-icon ">
+                      <Check size={20} />
+                    </span>
                     {item.listedBy.completionRate}% completion
                   </span>
-                  <span className="stat-dot">•</span>
                   <span className="stat-item">
-                    <span className="stat-icon">⏱</span>
+                    <span className="stat-icon">
+                      <Clock size={20} />
+                    </span>
                     Responds {item.listedBy.responseTime}
                   </span>
                 </div>
