@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   ArrowLeft,
   MapPin,
@@ -11,17 +11,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { FoodItem } from "../types";
 import "./ViewItemPage.css";
 import VerifiedBadge from "../components/VerifiedBadge";
+import { currentUser } from "../mockData";
 
 interface ViewItemPageProps {
   items: FoodItem[];
   onClaim?: (itemId: string) => void;
   onContact?: (userId: string, itemId?: string) => void;
+  onUpdate?: (item: FoodItem) => void;
 }
 
 export default function ViewItemPage({
   items,
   onClaim,
   onContact,
+  onUpdate,
 }: ViewItemPageProps) {
   const navigate = useNavigate();
   const { itemId } = useParams<{ itemId: string }>();
@@ -29,6 +32,25 @@ export default function ViewItemPage({
   const item = useMemo(() => {
     return itemId ? items.find((i) => i.id === itemId) || null : null;
   }, [itemId, items]);
+
+  const isOwner = item && item.listedBy.id === currentUser.id;
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editQuantity, setEditQuantity] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editBestBy, setEditBestBy] = useState("");
+  const [editPickupWindow, setEditPickupWindow] = useState("");
+
+  useEffect(() => {
+    if (item) {
+      setEditTitle(item.title);
+      setEditQuantity(item.quantity);
+      setEditDescription(item.description);
+      setEditBestBy(item.bestBy);
+      setEditPickupWindow(item.pickupWindow);
+    }
+  }, [item]);
 
   const handleClaim = () => {
     if (item && onClaim) {
@@ -42,6 +64,23 @@ export default function ViewItemPage({
       // Navigate to messages page with itemId to auto-open the chat
       navigate(`/messages?itemId=${item.id}`);
     }
+  };
+
+  const handleSaveChanges = () => {
+    if (!item || !onUpdate) return;
+
+    const updated: FoodItem = {
+      ...item,
+      title: editTitle,
+      quantity: editQuantity,
+      description: editDescription,
+      bestBy: editBestBy,
+      pickupWindow: editPickupWindow,
+    };
+
+    onUpdate(updated);
+    setIsEditing(false);
+    navigate("/my-offerings");
   };
 
   if (!item) {
@@ -93,7 +132,15 @@ export default function ViewItemPage({
 
           <div className="info-group">
             <label className="info-label">Item Title</label>
-            <p className="info-value">{item.title}</p>
+            {isOwner && isEditing ? (
+              <input
+                className="info-input"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+              />
+            ) : (
+              <p className="info-value">{item.title}</p>
+            )}
           </div>
 
           <div className="info-group">
@@ -105,15 +152,29 @@ export default function ViewItemPage({
 
           <div className="info-group">
             <label className="info-label">Quantity</label>
-            <p className="info-value">{item.quantity}</p>
+            {isOwner && isEditing ? (
+              <input
+                className="info-input"
+                value={editQuantity}
+                onChange={(e) => setEditQuantity(e.target.value)}
+              />
+            ) : (
+              <p className="info-value">{item.quantity}</p>
+            )}
           </div>
 
-          {item.description && (
-            <div className="info-group">
-              <label className="info-label">Description</label>
+          <div className="info-group">
+            <label className="info-label">Description</label>
+            {isOwner && isEditing ? (
+              <textarea
+                className="info-textarea"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+              />
+            ) : (
               <p className="info-value description">{item.description}</p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Availability Information */}
@@ -124,7 +185,15 @@ export default function ViewItemPage({
             <Calendar size={20} />
             <div>
               <label className="info-label">Best By</label>
-              <p className="info-value">{item.bestBy}</p>
+              {isOwner && isEditing ? (
+                <input
+                  className="info-input"
+                  value={editBestBy}
+                  onChange={(e) => setEditBestBy(e.target.value)}
+                />
+              ) : (
+                <p className="info-value">{item.bestBy}</p>
+              )}
             </div>
           </div>
 
@@ -132,7 +201,15 @@ export default function ViewItemPage({
             <Clock size={20} />
             <div>
               <label className="info-label">Pickup Window</label>
-              <p className="info-value">{item.pickupWindow}</p>
+              {isOwner && isEditing ? (
+                <input
+                  className="info-input"
+                  value={editPickupWindow}
+                  onChange={(e) => setEditPickupWindow(e.target.value)}
+                />
+              ) : (
+                <p className="info-value">{item.pickupWindow}</p>
+              )}
             </div>
           </div>
 
@@ -186,28 +263,59 @@ export default function ViewItemPage({
 
         {/* Action buttons */}
         <div className="view-item-actions">
-          {item.status === "available" && onClaim && (
+          {isOwner ? (
+            isEditing ? (
+              <>
+                <button
+                  className="contact-btn"
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="claim-btn"
+                  type="button"
+                  onClick={handleSaveChanges}
+                >
+                  Save changes
+                </button>
+              </>
+            ) : (
+              <button
+                className="claim-btn"
+                type="button"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit item
+              </button>
+            )
+          ) : (
             <>
-              <button className="contact-btn" onClick={handleContact}>
-                <MessageCircle size={20} />
-                Contact
-              </button>
-              <button className="claim-btn" onClick={handleClaim}>
-                Claim Item
-              </button>
+              {item.status === "available" && onClaim && (
+                <>
+                  <button className="contact-btn" onClick={handleContact}>
+                    <MessageCircle size={20} />
+                    Contact
+                  </button>
+                  <button className="claim-btn" onClick={handleClaim}>
+                    Claim Item
+                  </button>
+                </>
+              )}
+              {item.status === "claimed" && (
+                <div className="status-info">
+                  <p className="claimed-message">This item has been claimed</p>
+                </div>
+              )}
+              {item.status === "completed" && (
+                <div className="status-info">
+                  <p className="completed-message">
+                    This pickup has been completed
+                  </p>
+                </div>
+              )}
             </>
-          )}
-          {item.status === "claimed" && (
-            <div className="status-info">
-              <p className="claimed-message">This item has been claimed</p>
-            </div>
-          )}
-          {item.status === "completed" && (
-            <div className="status-info">
-              <p className="completed-message">
-                This pickup has been completed
-              </p>
-            </div>
           )}
         </div>
       </div>

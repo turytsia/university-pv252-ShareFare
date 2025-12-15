@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { CategoryFilter, Filters, FoodItem } from "../types";
 import FoodCard from "../components/FoodCard.tsx";
 import FilterModal from "../components/FilterModal.tsx";
@@ -7,7 +8,6 @@ import "./HomePage.css";
 
 interface MyOfferingsPageProps {
   items: FoodItem[];
-  onClaimItem: (itemId: string) => void;
   onViewItem: (item: FoodItem) => void;
 }
 
@@ -23,9 +23,9 @@ const categories: CategoryFilter[] = [
 
 export default function MyOfferingsPage({
   items,
-  onClaimItem,
   onViewItem,
 }: MyOfferingsPageProps) {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
@@ -116,8 +116,8 @@ export default function MyOfferingsPage({
           <FoodCard
             key={item.id}
             item={item}
-            onClaim={onClaimItem}
-            onView={onViewItem}
+            onView={() => navigate(`/item/${item.id}`)}
+            showAuthor={false}
           />
         ))}
       </div>

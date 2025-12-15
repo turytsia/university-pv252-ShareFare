@@ -7,8 +7,8 @@ import "./HomePage.css";
 
 interface HomePageProps {
   items: FoodItem[];
-  onClaimItem: (itemId: string) => void;
   onViewItem: (item: FoodItem) => void;
+  onClaimItem: (itemId: string) => void;
 }
 
 const categories: CategoryFilter[] = [
@@ -23,8 +23,8 @@ const categories: CategoryFilter[] = [
 
 export default function HomePage({
   items,
-  onClaimItem,
   onViewItem,
+  onClaimItem,
 }: HomePageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
@@ -115,8 +115,9 @@ export default function HomePage({
           <FoodCard
             key={item.id}
             item={item}
-            onClaim={onClaimItem}
             onView={onViewItem}
+            actionLabel="Claim Item"
+            onAction={onClaimItem}
           />
         ))}
       </div>

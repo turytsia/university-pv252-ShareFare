@@ -286,6 +286,25 @@ function App() {
     });
   };
 
+  const handleUpdateItem = (updatedItem: FoodItem) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === updatedItem.id ? updatedItem : item,
+      ),
+    );
+
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.itemId === updatedItem.id ? { ...msg, item: updatedItem } : msg,
+      ),
+    );
+
+    setToast({
+      message: `Updated "${updatedItem.title}".`,
+      type: "success",
+    });
+  };
+
   const unreadCount = messages.filter((m) => m.unreadCount > 0).length;
   const userItems = items.filter((item) => item.listedBy.id === currentUser.id);
   const homeItems = items.filter((item) => item.listedBy.id !== currentUser.id);
@@ -312,6 +331,7 @@ function App() {
         handleCompletePickup={handleCompletePickup}
         handleSubmitOwnerFeedback={handleSubmitOwnerFeedback}
         handleSubmitClaimerFeedback={handleSubmitClaimerFeedback}
+        handleUpdateItem={handleUpdateItem}
         setSelectedItem={setSelectedItem}
         setToast={setToast}
       />
@@ -346,6 +366,7 @@ interface AppContentProps {
       comment: string;
     },
   ) => void;
+  handleUpdateItem: (item: FoodItem) => void;
   setSelectedItem: (item: FoodItem | null) => void;
   setToast: (
     toast: { message: string; type: "success" | "error" | "info" } | null,
@@ -368,6 +389,7 @@ function AppContent({
   handleCompletePickup,
   handleSubmitOwnerFeedback,
   handleSubmitClaimerFeedback,
+  handleUpdateItem,
   setSelectedItem,
   setToast,
 }: AppContentProps) {
@@ -394,11 +416,7 @@ function AppContent({
           <Route
             path="/my-offerings"
             element={
-              <MyOfferingsPage
-                items={userItems}
-                onClaimItem={handleClaimItem}
-                onViewItem={setSelectedItem}
-              />
+              <MyOfferingsPage items={userItems} onViewItem={setSelectedItem} />
             }
           />
           <Route
@@ -419,9 +437,10 @@ function AppContent({
             path="/item/:itemId"
             element={
               <ViewItemPage
-                items={items}
+                items={userItems}
                 onClaim={handleClaimItem}
                 onContact={handleContactUser}
+                onUpdate={handleUpdateItem}
               />
             }
           />

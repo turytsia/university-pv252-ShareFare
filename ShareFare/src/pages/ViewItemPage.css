@@ -142,6 +142,21 @@
   white-space: pre-wrap;
 }
 
+.info-input,
+.info-textarea {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.info-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
 .category-badge {
   display: inline-block;
   background-color: #f3f4f6;

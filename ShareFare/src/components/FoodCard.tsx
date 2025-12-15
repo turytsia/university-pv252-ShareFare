@@ -5,13 +5,26 @@ import VerifiedBadge from "./VerifiedBadge";
 
 interface FoodCardProps {
   item: FoodItem;
-  onClaim: (itemId: string) => void;
   onView: (item: FoodItem) => void;
+  actionLabel?: string;
+  onAction?: (itemId: string) => void;
+  showAuthor?: boolean;
+  cardClickable?: boolean;
 }
 
-export default function FoodCard({ item, onClaim, onView }: FoodCardProps) {
+export default function FoodCard({
+  item,
+  onView,
+  actionLabel,
+  onAction,
+  showAuthor = true,
+  cardClickable = true,
+}: FoodCardProps) {
   return (
-    <div className="food-card" onClick={() => onView(item)}>
+    <div
+      className="food-card"
+      onClick={cardClickable ? () => onView(item) : undefined}
+    >
       <div className="food-card-image">
         <img src={item.image} alt={item.title} />
         <div className="food-card-badges">
@@ -47,36 +60,40 @@ export default function FoodCard({ item, onClaim, onView }: FoodCardProps) {
         </div>
 
         <div className="food-card-footer">
-          <div className="user-info">
-            <img src={item.listedBy.avatar} alt={item.listedBy.name} />
-            <div className="user-details">
-              <div className="user-name">
-                {item.listedBy.name}
-                {item.listedBy.verified && VerifiedBadge({ size: 14 })}
-              </div>
-              <div className="user-stats">
-                <span className="completion-rate">
-                  {item.listedBy.completionRate}% completion
-                </span>
-                <span className="dot-icon">
-                  <Dot />
-                </span>
-                <span className="response-time">
-                  Responds {item.listedBy.responseTime}
-                </span>
+          {showAuthor && (
+            <div className="user-info">
+              <img src={item.listedBy.avatar} alt={item.listedBy.name} />
+              <div className="user-details">
+                <div className="user-name">
+                  {item.listedBy.name}
+                  {item.listedBy.verified && VerifiedBadge({ size: 14 })}
+                </div>
+                <div className="user-stats">
+                  <span className="completion-rate">
+                    {item.listedBy.completionRate}% completion
+                  </span>
+                  <span className="dot-icon">
+                    <Dot />
+                  </span>
+                  <span className="response-time">
+                    Responds {item.listedBy.responseTime}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          <button
-            className="claim-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClaim(item.id);
-            }}
-          >
-            Claim Item
-          </button>
+          {actionLabel && onAction && (
+            <button
+              className="claim-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction(item.id);
+              }}
+            >
+              {actionLabel}
+            </button>
+          )}
         </div>
       </div>
     </div>
