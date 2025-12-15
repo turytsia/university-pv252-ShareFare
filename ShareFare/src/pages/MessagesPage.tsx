@@ -170,7 +170,23 @@ export default function MessagesPage({
           </div>
         </div>
       ) : (
-        <div className="chat-view">
+        <>
+          {/* Show "Leave Feedback" banner above the chat window */}
+          {!selectedMessage.isOwner &&
+            selectedMessage.status === "completed" &&
+            !selectedMessage.claimerFeedbackGiven && (
+              <div className="feedback-prompt">
+                <p>The pickup has been completed! How was your experience?</p>
+                <button
+                  className="leave-feedback-btn"
+                  onClick={() => setShowClaimerFeedbackModal(true)}
+                >
+                  Leave Feedback
+                </button>
+              </div>
+            )}
+
+          <div className="chat-view">
           <div className="chat-header">
             <button
               className="back-btn"
@@ -225,21 +241,6 @@ export default function MessagesPage({
                 <span className="message-timestamp">{msg.timestamp}</span>
               </div>
             ))}
-
-            {/* Show "Leave Feedback" button for claimer when pickup is completed and they haven't given feedback */}
-            {!selectedMessage.isOwner &&
-              selectedMessage.status === "completed" &&
-              !selectedMessage.claimerFeedbackGiven && (
-                <div className="feedback-prompt">
-                  <p>The pickup has been completed! How was your experience?</p>
-                  <button
-                    className="leave-feedback-btn"
-                    onClick={() => setShowClaimerFeedbackModal(true)}
-                  >
-                    Leave Feedback
-                  </button>
-                </div>
-              )}
           </div>
 
           <div className="chat-input">
@@ -259,6 +260,7 @@ export default function MessagesPage({
             </button>
           </div>
         </div>
+        </>
       )}
 
       {/* Confirm Modal for Owner to Complete Pickup */}
