@@ -288,6 +288,7 @@ function App() {
 
   const unreadCount = messages.filter((m) => m.unreadCount > 0).length;
   const userItems = items.filter((item) => item.listedBy.id === currentUser.id);
+  const homeItems = items.filter((item) => item.listedBy.id !== currentUser.id);
 
   if (!isAuthenticated) {
     return <LoginPage onLogin={handleLogin} />;
@@ -296,7 +297,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppContent
-        items={items}
+        items={homeItems}
         messages={messages}
         selectedItem={selectedItem}
         toast={toast}
