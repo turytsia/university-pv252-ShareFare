@@ -121,6 +121,7 @@ export default function HomePage({
       <div className={`items-grid ${viewMode}`}>
         {filteredItems.map((item) => (
           <FoodCard
+            key={item.id}
             item={item}
             onView={onViewItem}
             onClaim={onClaimItem}
