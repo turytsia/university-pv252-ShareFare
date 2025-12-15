@@ -7,12 +7,12 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Header from "./components/Header";
-import HomePage from "./components/HomePage";
-import ProfilePage from "./components/ProfilePage";
-import AddItemPage from "./components/AddItemPage";
-import ViewItemPage from "./components/ViewItemPage";
-import LoginPage from "./components/LoginPage";
-import MessagesPage from "./components/MessagesPage";
+import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import AddItemPage from "./pages/AddItemPage";
+import ViewItemPage from "./pages/ViewItemPage";
+import LoginPage from "./pages/LoginPage";
+import MessagesPage from "./pages/MessagesPage";
 import ItemDetailsModal from "./components/ItemDetailsModal";
 import Toast from "./components/Toast";
 import { currentUser, mockFoodItems, mockMessages } from "./mockData";

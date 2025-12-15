@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
 import type { CategoryFilter, Filters, FoodItem } from "../types";
-import FoodCard from "./FoodCard.tsx";
-import FilterModal from "./FilterModal.tsx";
+import FoodCard from "../components/FoodCard.tsx";
+import FilterModal from "../components/FilterModal.tsx";
 import "./HomePage.css";
 
 interface HomePageProps {

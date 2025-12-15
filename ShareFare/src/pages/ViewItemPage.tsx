@@ -10,7 +10,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import type { FoodItem } from "../types";
 import "./ViewItemPage.css";
-import VerifiedBadge from "./VerifiedBadge";
+import VerifiedBadge from "../components/VerifiedBadge";
 
 interface ViewItemPageProps {
   items: FoodItem[];

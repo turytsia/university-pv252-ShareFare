@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, Send } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { Message as MessageType } from "../types";
-import ConfirmModal from "./ConfirmModal";
-import FeedbackModal from "./FeedbackModal";
-import OwnerFeedbackModal from "./OwnerFeedbackModal";
+import ConfirmModal from "../components/ConfirmModal";
+import FeedbackModal from "../components/FeedbackModal";
+import OwnerFeedbackModal from "../components/OwnerFeedbackModal";
 import "./MessagesPage.css";
 
 interface MessagesPageProps {
