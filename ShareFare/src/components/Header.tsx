@@ -1,4 +1,10 @@
-import { MapPin, MessageCircle, User, ShoppingBag } from "lucide-react";
+import {
+  MapPin,
+  MessageCircle,
+  User,
+  ShoppingBag,
+  Package,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
 
@@ -33,9 +39,9 @@ export default function Header({
             </div>
           )}
 
-          <button className="icon-btn" onClick={onOpenMessages}>
-            <ShoppingBag size={20} />
-          </button>
+          <Link to="/my-offerings" className="icon-btn" aria-label="My offerings">
+            <Package size={20} />
+          </Link>
 
           <button className="icon-btn" onClick={onOpenMessages}>
             <MessageCircle size={20} />

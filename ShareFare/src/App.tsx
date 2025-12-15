@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Header from "./components/Header";
 import HomePage from "./pages/HomePage";
+import MyOfferingsPage from "./pages/MyOfferingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import AddItemPage from "./pages/AddItemPage";
 import ViewItemPage from "./pages/ViewItemPage";
@@ -384,6 +385,16 @@ function AppContent({
             element={
               <HomePage
                 items={items}
+                onClaimItem={handleClaimItem}
+                onViewItem={setSelectedItem}
+              />
+            }
+          />
+          <Route
+            path="/my-offerings"
+            element={
+              <MyOfferingsPage
+                items={userItems}
                 onClaimItem={handleClaimItem}
                 onViewItem={setSelectedItem}
               />
