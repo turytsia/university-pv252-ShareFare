@@ -140,7 +140,7 @@ export default function ViewItemPage({
             <MapPin size={20} />
             <div>
               <label className="info-label">Location</label>
-              <p className="info-value">{item.location}</p>
+              <p className="info-value">{item.distance} km away</p>
               {item.exactAddress && item.status === "claimed" && (
                 <p className="info-subvalue">{item.exactAddress}</p>
               )}

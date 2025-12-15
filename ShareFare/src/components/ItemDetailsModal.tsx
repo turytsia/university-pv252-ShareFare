@@ -44,7 +44,7 @@ export default function ItemDetailsModal({
           <div className="item-modal-badges">
             <span className="distance-badge">
               <MapPin size={14} />
-              {item.location}
+              {item.distance} km away
             </span>
             <span className="status-badge available">available</span>
           </div>
@@ -83,7 +83,7 @@ export default function ItemDetailsModal({
                 <MapPin size={18} />
                 <div>
                   <div className="detail-label">Location</div>
-                  <div className="detail-value">{item.location}</div>
+                  <div className="detail-value">{item.distance} km away</div>
                   <div className="detail-note">
                     Exact address will be shared after claiming
                   </div>

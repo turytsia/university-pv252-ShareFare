@@ -34,7 +34,6 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
         { month: "short", day: "numeric" },
       ), // 7 days from now
       pickupWindow: "Flexible schedule",
-      location: "0.0 mi away",
       distance: 0,
       status: "available",
     };

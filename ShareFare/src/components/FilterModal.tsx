@@ -60,7 +60,7 @@ export default function FilterModal({
             <label className="filter-label">
               <span>Maximum Distance</span>
               <span className="filter-value">
-                &lt; {localFilters.maxDistance} mi
+                &lt; {localFilters.maxDistance} km
               </span>
             </label>
             <input

@@ -33,8 +33,7 @@ export interface FoodItem {
   dietaryTags: string[];
   bestBy: string;
   pickupWindow: string;
-  location: string;
-  distance: number; // in miles
+  distance: number; // in kilometers
   exactAddress?: string;
   listedBy: User;
   status: "available" | "claimed" | "completed";

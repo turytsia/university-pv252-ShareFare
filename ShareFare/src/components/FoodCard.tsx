@@ -16,7 +16,7 @@ export default function FoodCard({ item, onClaim, onView }: FoodCardProps) {
         <div className="food-card-badges">
           <span className="distance-badge">
             <MapPin size={14} />
-            {item.location}
+            {item.distance} km away
           </span>
           <span className="status-badge available">available</span>
         </div>
