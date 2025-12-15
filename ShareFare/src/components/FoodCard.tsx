@@ -1,4 +1,4 @@
-import { MapPin, Calendar, Clock, CheckCircle2, Dot } from "lucide-react";
+import { MapPin, Calendar, Clock, Dot } from "lucide-react";
 import type { FoodItem } from "../types";
 import "./FoodCard.css";
 import VerifiedBadge from "./VerifiedBadge";

@@ -1,12 +1,4 @@
-import {
-  X,
-  MapPin,
-  Calendar,
-  Clock,
-  CheckCircle2,
-  MessageCircle,
-  Check,
-} from "lucide-react";
+import { X, MapPin, Calendar, Clock, MessageCircle, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { FoodItem } from "../types";
 import "./ItemDetailsModal.css";

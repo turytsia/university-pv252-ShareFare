@@ -5,7 +5,6 @@ import {
   Calendar,
   Clock,
   User,
-  CheckCircle,
   MessageCircle,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
