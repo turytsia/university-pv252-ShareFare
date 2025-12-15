@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { X, Star } from 'lucide-react';
-import './FeedbackModal.css';
+import { useState } from "react";
+import { X, Star } from "lucide-react";
+import "./FeedbackModal.css";
 
 interface FeedbackModalProps {
   otherUserName: string;
@@ -14,13 +14,13 @@ interface FeedbackModalProps {
   onClose: () => void;
 }
 
-const StarRating = ({ 
-  value, 
-  onChange, 
-  label 
-}: { 
-  value: number; 
-  onChange: (v: number) => void; 
+const StarRating = ({
+  value,
+  onChange,
+  label,
+}: {
+  value: number;
+  onChange: (v: number) => void;
   label: string;
 }) => (
   <div className="rating-item">
@@ -30,32 +30,45 @@ const StarRating = ({
         <button
           key={star}
           type="button"
-          className={`star-btn ${value >= star ? 'active' : ''}`}
+          className={`star-btn ${value >= star ? "active" : ""}`}
           onClick={() => onChange(star)}
         >
-          <Star size={24} fill={value >= star ? 'currentColor' : 'none'} />
+          <Star size={24} fill={value >= star ? "currentColor" : "none"} />
         </button>
       ))}
     </div>
   </div>
 );
 
-export default function FeedbackModal({ otherUserName, itemTitle, onSubmit, onClose }: FeedbackModalProps) {
+export default function FeedbackModal({
+  otherUserName,
+  itemTitle,
+  onSubmit,
+  onClose,
+}: FeedbackModalProps) {
   const [responseTime, setResponseTime] = useState(0);
   const [packagingQuality, setPackagingQuality] = useState(0);
   const [contentsQuality, setContentsQuality] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (responseTime && packagingQuality && contentsQuality) {
-      onSubmit({ responseTime, packagingQuality, contentsQuality, comment });
+      onSubmit({
+        responseTime,
+        packagingQuality,
+        contentsQuality,
+        comment,
+      });
     }
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="feedback-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="feedback-modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="feedback-modal-header">
           <div>
             <h2>Leave Feedback</h2>
@@ -118,8 +131,8 @@ export default function FeedbackModal({ otherUserName, itemTitle, onSubmit, onCl
             <button type="button" className="skip-btn" onClick={onClose}>
               Skip for now
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="submit-feedback-btn"
               disabled={!responseTime || !packagingQuality || !contentsQuality}
             >

@@ -1,48 +1,52 @@
-import { useState } from 'react';
-import { ArrowLeft, Upload } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import type { FoodItem } from '../types';
-import './AddItemPage.css';
+import { useState } from "react";
+import { ArrowLeft, Upload } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import type { FoodItem } from "../types";
+import "./AddItemPage.css";
 
 interface AddItemPageProps {
-  onAddItem: (item: Omit<FoodItem, 'id' | 'listedBy'>) => void;
+  onAddItem: (item: Omit<FoodItem, "id" | "listedBy">) => void;
 }
 
 export default function AddItemPage({ onAddItem }: AddItemPageProps) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    title: '',
-    category: '',
-    quantity: '',
-    description: '',
+    title: "",
+    category: "",
+    quantity: "",
+    description: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Create the new item (without id and listedBy, which will be set in App.tsx)
-    const newItem: Omit<FoodItem, 'id' | 'listedBy'> = {
+    const newItem: Omit<FoodItem, "id" | "listedBy"> = {
       title: formData.title,
       description: formData.description,
       quantity: formData.quantity,
-      category: formData.category as FoodItem['category'],
-      image: 'https://images.unsplash.com/photo-1495195134817-aeb325a55b65?w=500&q=80', // Default placeholder image
+      category: formData.category as FoodItem["category"],
+      image:
+        "https://images.unsplash.com/photo-1495195134817-aeb325a55b65?w=500&q=80", // Default placeholder image
       dietaryTags: [],
-      bestBy: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), // 7 days from now
-      pickupWindow: 'Flexible schedule',
-      location: '0.0 mi away',
+      bestBy: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(
+        "en-US",
+        { month: "short", day: "numeric" },
+      ), // 7 days from now
+      pickupWindow: "Flexible schedule",
+      location: "0.0 mi away",
       distance: 0,
-      status: 'available',
+      status: "available",
     };
-    
+
     onAddItem(newItem);
-    navigate('/');
+    navigate("/");
   };
 
   return (
     <div className="add-item-page">
       <div className="add-item-header">
-        <button className="back-btn" onClick={() => navigate('/')}>
+        <button className="back-btn" onClick={() => navigate("/")}>
           <ArrowLeft size={20} />
         </button>
         <h2>Share Food</h2>
@@ -58,20 +62,26 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
             <span>PNG, JPG up to 10MB</span>
           </div>
           <p className="form-hint">
-            💡 Clear photos help others see what you're sharing. Natural lighting works best!
+            💡 Clear photos help others see what you're sharing. Natural
+            lighting works best!
           </p>
         </div>
 
         <div className="form-section">
           <h3>Basic Information</h3>
-          
+
           <div className="form-group">
             <label className="form-label">Item Title *</label>
             <input
               type="text"
               placeholder="e.g., Fresh Garden Tomatoes, Homemade Cookies"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  title: e.target.value,
+                })
+              }
               required
             />
           </div>
@@ -80,7 +90,12 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
             <label className="form-label">Category *</label>
             <select
               value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  category: e.target.value,
+                })
+              }
               required
             >
               <option value="">Select a category</option>
@@ -99,7 +114,12 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
               type="text"
               placeholder="e.g., 3 lbs, 1 loaf, Serves 4"
               value={formData.quantity}
-              onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  quantity: e.target.value,
+                })
+              }
               required
             />
             <p className="form-hint">
@@ -112,14 +132,23 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
             <textarea
               placeholder="Share more details about the food, how it was prepared, storage instructions, etc."
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  description: e.target.value,
+                })
+              }
               rows={4}
             />
           </div>
         </div>
 
         <div className="form-actions">
-          <button type="button" className="cancel-btn" onClick={() => navigate('/')}>
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={() => navigate("/")}
+          >
             Cancel
           </button>
           <button type="submit" className="submit-btn">

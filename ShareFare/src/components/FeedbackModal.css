@@ -1,208 +1,208 @@
 .feedback-modal-content {
-    background: white;
-    border-radius: 16px;
-    max-width: 540px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
+  background: white;
+  border-radius: 16px;
+  max-width: 540px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .feedback-modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--gray-200);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .feedback-modal-header h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--gray-900);
-    margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0 0 0.25rem 0;
 }
 
 .feedback-modal-header p {
-    font-size: 0.875rem;
-    color: var(--gray-600);
-    margin: 0;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  margin: 0;
 }
 
 .feedback-form {
-    padding: 1.5rem;
+  padding: 1.5rem;
 }
 
 .feedback-item-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--gray-50);
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .feedback-icon {
-    font-size: 2rem;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    border-radius: 12px;
-    flex-shrink: 0;
+  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
 .feedback-item-title {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--gray-900);
-    margin-bottom: 2px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 2px;
 }
 
 .feedback-item-subtitle {
-    font-size: 0.8125rem;
-    color: var(--success-green);
-    font-weight: 500;
+  font-size: 0.8125rem;
+  color: var(--success-green);
+  font-weight: 500;
 }
 
 .ratings-section {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .rating-item {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .rating-item label {
-    display: block;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--gray-900);
-    margin-bottom: 0.75rem;
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 0.75rem;
 }
 
 .stars {
-    display: flex;
-    gap: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .star-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: var(--gray-100);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-400);
-    transition: all 0.2s;
-    padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  transition: all 0.2s;
+  padding: 0;
 }
 
 .star-btn:hover {
-    background: var(--gray-200);
-    transform: scale(1.05);
+  background: var(--gray-200);
+  transform: scale(1.05);
 }
 
 .star-btn.active {
-    background: var(--warning-amber);
-    color: white;
+  background: var(--warning-amber);
+  color: white;
 }
 
 .rating-description {
-    font-size: 0.8125rem;
-    color: var(--gray-500);
-    margin: 0.5rem 0 1.5rem 0;
-    line-height: 1.5;
+  font-size: 0.8125rem;
+  color: var(--gray-500);
+  margin: 0.5rem 0 1.5rem 0;
+  line-height: 1.5;
 }
 
 .comment-section {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .comment-section label {
-    display: block;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--gray-900);
-    margin-bottom: 0.5rem;
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
 }
 
 .comment-section textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 8px;
-    font-size: 0.9375rem;
-    color: var(--gray-900);
-    resize: vertical;
-    font-family: inherit;
-    line-height: 1.5;
-    transition: border-color 0.2s;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  color: var(--gray-900);
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+  transition: border-color 0.2s;
 }
 
 .comment-section textarea:focus {
-    border-color: var(--primary-green-600);
+  border-color: var(--primary-green-600);
 }
 
 .comment-section textarea::placeholder {
-    color: var(--gray-400);
+  color: var(--gray-400);
 }
 
 .feedback-actions {
-    display: flex;
-    gap: 0.75rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--gray-200);
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--gray-200);
 }
 
 .skip-btn,
 .submit-feedback-btn {
-    flex: 1;
-    padding: 0.875rem 1.5rem;
-    border-radius: 8px;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    transition: all 0.2s;
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
 .skip-btn {
-    background: white;
-    border: 1px solid var(--gray-300);
-    color: var(--gray-700);
+  background: white;
+  border: 1px solid var(--gray-300);
+  color: var(--gray-700);
 }
 
 .skip-btn:hover {
-    background: var(--gray-50);
-    border-color: var(--gray-400);
+  background: var(--gray-50);
+  border-color: var(--gray-400);
 }
 
 .submit-feedback-btn {
-    background: var(--primary-green-600);
-    color: white;
+  background: var(--primary-green-600);
+  color: white;
 }
 
 .submit-feedback-btn:hover:not(:disabled) {
-    background: var(--primary-green-700);
+  background: var(--primary-green-700);
 }
 
 .submit-feedback-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 640px) {
-    .feedback-form {
-        padding: 1rem;
-    }
-    .stars {
-        gap: 0.25rem;
-    }
-    .star-btn {
-        width: 36px;
-        height: 36px;
-    }
+  .feedback-form {
+    padding: 1rem;
+  }
+  .stars {
+    gap: 0.25rem;
+  }
+  .star-btn {
+    width: 36px;
+    height: 36px;
+  }
 }

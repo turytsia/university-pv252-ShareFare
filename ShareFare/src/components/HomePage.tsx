@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Search, SlidersHorizontal, Grid, List } from 'lucide-react';
-import type { CategoryFilter, Filters, FoodItem } from '../types';
-import FoodCard from './FoodCard.tsx';
-import FilterModal from './FilterModal.tsx';
-import './HomePage.css';
+import { useState } from "react";
+import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
+import type { CategoryFilter, Filters, FoodItem } from "../types";
+import FoodCard from "./FoodCard.tsx";
+import FilterModal from "./FilterModal.tsx";
+import "./HomePage.css";
 
 interface HomePageProps {
   items: FoodItem[];
@@ -11,16 +11,29 @@ interface HomePageProps {
   onViewItem: (item: FoodItem) => void;
 }
 
-const categories: CategoryFilter[] = ['All', 'Produce', 'Dairy', 'Prepared Food', 'Pantry', 'Baked Goods', 'Other'];
+const categories: CategoryFilter[] = [
+  "All",
+  "Produce",
+  "Dairy",
+  "Prepared Food",
+  "Pantry",
+  "Baked Goods",
+  "Other",
+];
 
-export default function HomePage({ items, onClaimItem, onViewItem }: HomePageProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+export default function HomePage({
+  items,
+  onClaimItem,
+  onViewItem,
+}: HomePageProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] =
+    useState<CategoryFilter>("All");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<Filters>({
     maxDistance: 5,
-    pickupTime: 'any',
+    pickupTime: "any",
     dietary: [],
     verifiedOnly: false,
     sealedPackageOnly: false,
@@ -28,14 +41,24 @@ export default function HomePage({ items, onClaimItem, onViewItem }: HomePagePro
   });
 
   const filteredItems = items.filter((item) => {
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch =
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+    const matchesCategory =
+      selectedCategory === "All" || item.category === selectedCategory;
     const matchesDistance = item.distance <= filters.maxDistance;
     const matchesVerified = !filters.verifiedOnly || item.listedBy.verified;
-    const matchesCompletion = item.listedBy.completionRate >= filters.minCompletionRate;
+    const matchesCompletion =
+      item.listedBy.completionRate >= filters.minCompletionRate;
 
-    return matchesSearch && matchesCategory && matchesDistance && matchesVerified && matchesCompletion && item.status === 'available';
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesDistance &&
+      matchesVerified &&
+      matchesCompletion &&
+      item.status === "available"
+    );
   });
 
   return (
@@ -59,7 +82,7 @@ export default function HomePage({ items, onClaimItem, onViewItem }: HomePagePro
         {categories.map((category) => (
           <button
             key={category}
-            className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
+            className={`category-btn ${selectedCategory === category ? "active" : ""}`}
             onClick={() => setSelectedCategory(category)}
           >
             {category}
@@ -68,17 +91,19 @@ export default function HomePage({ items, onClaimItem, onViewItem }: HomePagePro
       </div>
 
       <div className="results-header">
-        <p className="results-count">{filteredItems.length} items available near you</p>
+        <p className="results-count">
+          {filteredItems.length} items available near you
+        </p>
         <div className="view-toggle">
           <button
-            className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-            onClick={() => setViewMode('grid')}
+            className={`view-btn ${viewMode === "grid" ? "active" : ""}`}
+            onClick={() => setViewMode("grid")}
           >
             <Grid size={20} />
           </button>
           <button
-            className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
+            className={`view-btn ${viewMode === "list" ? "active" : ""}`}
+            onClick={() => setViewMode("list")}
           >
             <List size={20} />
           </button>

@@ -1,13 +1,16 @@
-import { MapPin, MessageCircle, User, ShoppingBag } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import './Header.css';
+import { MapPin, MessageCircle, User, ShoppingBag } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import "./Header.css";
 
 interface HeaderProps {
   onOpenMessages?: () => void;
   unreadCount?: number;
 }
 
-export default function Header({ onOpenMessages, unreadCount = 0 }: HeaderProps) {
+export default function Header({
+  onOpenMessages,
+  unreadCount = 0,
+}: HeaderProps) {
   const location = useLocation();
 
   return (
@@ -22,7 +25,7 @@ export default function Header({ onOpenMessages, unreadCount = 0 }: HeaderProps)
         </Link>
 
         <div className="header-actions">
-          {location.pathname === '/' && (
+          {location.pathname === "/" && (
             <div className="location-badge">
               <MapPin size={16} />
               <span>Downtown Berkeley, CA</span>

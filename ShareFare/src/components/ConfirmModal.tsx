@@ -1,5 +1,5 @@
-import { X, CheckCircle2 } from 'lucide-react';
-import './ConfirmModal.css';
+import { X, CheckCircle2 } from "lucide-react";
+import "./ConfirmModal.css";
 
 interface ConfirmModalProps {
   title: string;
@@ -20,7 +20,10 @@ export default function ConfirmModal({
 }: ConfirmModalProps) {
   return (
     <div className="modal-overlay" onClick={onCancel}>
-      <div className="confirm-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="confirm-modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="close-btn" onClick={onCancel}>
           <X size={20} />
         </button>

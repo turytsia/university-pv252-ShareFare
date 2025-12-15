@@ -1,15 +1,20 @@
-import { useEffect } from 'react';
-import { CheckCircle2, X } from 'lucide-react';
-import './Toast.css';
+import { useEffect } from "react";
+import { CheckCircle2, X } from "lucide-react";
+import "./Toast.css";
 
 interface ToastProps {
   message: string;
-  type?: 'success' | 'error' | 'info';
+  type?: "success" | "error" | "info";
   onClose: () => void;
   duration?: number;
 }
 
-export default function Toast({ message, type = 'success', onClose, duration = 3000 }: ToastProps) {
+export default function Toast({
+  message,
+  type = "success",
+  onClose,
+  duration = 3000,
+}: ToastProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();

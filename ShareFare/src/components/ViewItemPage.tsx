@@ -1,8 +1,16 @@
-import { useMemo } from 'react';
-import { ArrowLeft, MapPin, Calendar, Clock, User, CheckCircle, MessageCircle } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
-import type { FoodItem } from '../types';
-import './ViewItemPage.css';
+import { useMemo } from "react";
+import {
+  ArrowLeft,
+  MapPin,
+  Calendar,
+  Clock,
+  User,
+  CheckCircle,
+  MessageCircle,
+} from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import type { FoodItem } from "../types";
+import "./ViewItemPage.css";
 
 interface ViewItemPageProps {
   items: FoodItem[];
@@ -10,12 +18,16 @@ interface ViewItemPageProps {
   onContact?: (userId: string, itemId?: string) => void;
 }
 
-export default function ViewItemPage({ items, onClaim, onContact }: ViewItemPageProps) {
+export default function ViewItemPage({
+  items,
+  onClaim,
+  onContact,
+}: ViewItemPageProps) {
   const navigate = useNavigate();
   const { itemId } = useParams<{ itemId: string }>();
-  
+
   const item = useMemo(() => {
-    return itemId ? items.find(i => i.id === itemId) || null : null;
+    return itemId ? items.find((i) => i.id === itemId) || null : null;
   }, [itemId, items]);
 
   const handleClaim = () => {
@@ -78,7 +90,7 @@ export default function ViewItemPage({ items, onClaim, onContact }: ViewItemPage
         {/* Basic Information */}
         <div className="info-section">
           <h3>Basic Information</h3>
-          
+
           <div className="info-group">
             <label className="info-label">Item Title</label>
             <p className="info-value">{item.title}</p>
@@ -107,7 +119,7 @@ export default function ViewItemPage({ items, onClaim, onContact }: ViewItemPage
         {/* Availability Information */}
         <div className="info-section">
           <h3>Availability</h3>
-          
+
           <div className="info-row">
             <Calendar size={20} />
             <div>
@@ -129,7 +141,7 @@ export default function ViewItemPage({ items, onClaim, onContact }: ViewItemPage
             <div>
               <label className="info-label">Location</label>
               <p className="info-value">{item.location}</p>
-              {item.exactAddress && item.status === 'claimed' && (
+              {item.exactAddress && item.status === "claimed" && (
                 <p className="info-subvalue">{item.exactAddress}</p>
               )}
             </div>
@@ -139,9 +151,13 @@ export default function ViewItemPage({ items, onClaim, onContact }: ViewItemPage
         {/* Listed By Information */}
         <div className="info-section">
           <h3>Listed By</h3>
-          
+
           <div className="user-info">
-            <img src={item.listedBy.avatar} alt={item.listedBy.name} className="user-avatar" />
+            <img
+              src={item.listedBy.avatar}
+              alt={item.listedBy.name}
+              className="user-avatar"
+            />
             <div className="user-details">
               <div className="user-name-row">
                 <h4>{item.listedBy.name}</h4>
@@ -172,31 +188,27 @@ export default function ViewItemPage({ items, onClaim, onContact }: ViewItemPage
 
         {/* Action buttons */}
         <div className="view-item-actions">
-          {item.status === 'available' && onClaim && (
+          {item.status === "available" && onClaim && (
             <>
-              <button 
-                className="contact-btn" 
-                onClick={handleContact}
-              >
+              <button className="contact-btn" onClick={handleContact}>
                 <MessageCircle size={20} />
                 Contact
               </button>
-              <button 
-                className="claim-btn" 
-                onClick={handleClaim}
-              >
+              <button className="claim-btn" onClick={handleClaim}>
                 Claim Item
               </button>
             </>
           )}
-          {item.status === 'claimed' && (
+          {item.status === "claimed" && (
             <div className="status-info">
               <p className="claimed-message">This item has been claimed</p>
             </div>
           )}
-          {item.status === 'completed' && (
+          {item.status === "completed" && (
             <div className="status-info">
-              <p className="completed-message">This pickup has been completed</p>
+              <p className="completed-message">
+                This pickup has been completed
+              </p>
             </div>
           )}
         </div>

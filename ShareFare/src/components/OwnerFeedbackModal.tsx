@@ -1,24 +1,21 @@
-import { useState } from 'react';
-import { X, Star } from 'lucide-react';
-import './OwnerFeedbackModal.css';
+import { useState } from "react";
+import { X, Star } from "lucide-react";
+import "./OwnerFeedbackModal.css";
 
 interface OwnerFeedbackModalProps {
   claimerName: string;
   itemTitle: string;
-  onSubmit: (feedback: {
-    responseTime: number;
-    comment: string;
-  }) => void;
+  onSubmit: (feedback: { responseTime: number; comment: string }) => void;
   onClose: () => void;
 }
 
-const StarRating = ({ 
-  value, 
-  onChange, 
-  label 
-}: { 
-  value: number; 
-  onChange: (v: number) => void; 
+const StarRating = ({
+  value,
+  onChange,
+  label,
+}: {
+  value: number;
+  onChange: (v: number) => void;
   label: string;
 }) => (
   <div className="rating-group">
@@ -28,10 +25,10 @@ const StarRating = ({
         <button
           key={star}
           type="button"
-          className={`star-btn ${value >= star ? 'active' : ''}`}
+          className={`star-btn ${value >= star ? "active" : ""}`}
           onClick={() => onChange(star)}
         >
-          <Star size={24} fill={value >= star ? 'currentColor' : 'none'} />
+          <Star size={24} fill={value >= star ? "currentColor" : "none"} />
         </button>
       ))}
     </div>
@@ -45,12 +42,12 @@ export default function OwnerFeedbackModal({
   onClose,
 }: OwnerFeedbackModalProps) {
   const [responseTime, setResponseTime] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (responseTime === 0) {
-      alert('Please rate the response time');
+      alert("Please rate the response time");
       return;
     }
     onSubmit({ responseTime, comment });
@@ -68,7 +65,8 @@ export default function OwnerFeedbackModal({
 
         <div className="modal-body">
           <p className="feedback-intro">
-            How was your experience with <strong>{claimerName}</strong> for <strong>{itemTitle}</strong>?
+            How was your experience with <strong>{claimerName}</strong> for{" "}
+            <strong>{itemTitle}</strong>?
           </p>
 
           <form onSubmit={handleSubmit}>
@@ -79,7 +77,9 @@ export default function OwnerFeedbackModal({
             />
 
             <div className="form-group">
-              <label className="rating-label">Additional Comments (Optional)</label>
+              <label className="rating-label">
+                Additional Comments (Optional)
+              </label>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}

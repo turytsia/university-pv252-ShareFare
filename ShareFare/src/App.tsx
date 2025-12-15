@@ -1,101 +1,116 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Header from './components/Header';
-import HomePage from './components/HomePage';
-import ProfilePage from './components/ProfilePage';
-import AddItemPage from './components/AddItemPage';
-import ViewItemPage from './components/ViewItemPage';
-import LoginPage from './components/LoginPage';
-import MessagesPage from './components/MessagesPage';
-import ItemDetailsModal from './components/ItemDetailsModal';
-import Toast from './components/Toast';
-import { currentUser, mockFoodItems, mockMessages } from './mockData';
-import type { FoodItem, Message } from './types';
-import './App.css';
+import { useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+import Header from "./components/Header";
+import HomePage from "./components/HomePage";
+import ProfilePage from "./components/ProfilePage";
+import AddItemPage from "./components/AddItemPage";
+import ViewItemPage from "./components/ViewItemPage";
+import LoginPage from "./components/LoginPage";
+import MessagesPage from "./components/MessagesPage";
+import ItemDetailsModal from "./components/ItemDetailsModal";
+import Toast from "./components/Toast";
+import { currentUser, mockFoodItems, mockMessages } from "./mockData";
+import type { FoodItem, Message } from "./types";
+import "./App.css";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [items, setItems] = useState<FoodItem[]>(mockFoodItems);
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info";
+  } | null>(null);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
   };
 
-  const handleAddItem = (newItem: Omit<FoodItem, 'id' | 'listedBy'>) => {
+  const handleAddItem = (newItem: Omit<FoodItem, "id" | "listedBy">) => {
     const itemWithId: FoodItem = {
       ...newItem,
       id: `item-${Date.now()}`,
       listedBy: currentUser,
     };
-    
+
     setItems((prevItems) => [itemWithId, ...prevItems]);
-    
+
     setToast({
       message: `Successfully listed "${itemWithId.title}"!`,
-      type: 'success',
+      type: "success",
     });
   };
 
   const handleMarkAsClaimed = (itemId: string) => {
-    const item = items.find(i => i.id === itemId);
+    const item = items.find((i) => i.id === itemId);
     if (!item) return;
 
     // Update item status to claimed
     setItems((prevItems) =>
       prevItems.map((i) =>
-        i.id === itemId
-          ? { ...i, status: 'claimed' as const }
-          : i
-      )
+        i.id === itemId ? { ...i, status: "claimed" as const } : i,
+      ),
     );
 
     // Show success toast
     setToast({
       message: `"${item.title}" has been marked as claimed.`,
-      type: 'success',
+      type: "success",
     });
   };
 
   const handleClaimItem = (itemId: string) => {
-    const item = items.find(i => i.id === itemId);
+    const item = items.find((i) => i.id === itemId);
     if (!item) return;
 
     // Update item status
     setItems((prevItems) =>
       prevItems.map((i) =>
         i.id === itemId
-          ? { ...i, status: 'claimed' as const, claimedBy: currentUser.id }
-          : i
-      )
+          ? {
+              ...i,
+              status: "claimed" as const,
+              claimedBy: currentUser.id,
+            }
+          : i,
+      ),
     );
 
     // Create a new message conversation with the item owner
     const existingMessage = messages.find(
-      (m) => m.itemId === itemId && m.otherUser.id === item.listedBy.id
+      (m) => m.itemId === itemId && m.otherUser.id === item.listedBy.id,
     );
 
     if (!existingMessage) {
       const newMessage: Message = {
         id: `msg-${Date.now()}`,
         itemId: item.id,
-        item: { ...item, status: 'claimed' as const, claimedBy: currentUser.id },
+        item: {
+          ...item,
+          status: "claimed" as const,
+          claimedBy: currentUser.id,
+        },
         otherUser: item.listedBy,
         lastMessage: `Hi! I'd like to claim your ${item.title}.`,
-        timestamp: 'Just now',
+        timestamp: "Just now",
         unreadCount: 0,
-        status: 'pending',
+        status: "pending",
         isOwner: false,
         messages: [
           {
             id: `chat-${Date.now()}`,
             senderId: currentUser.id,
             text: `Hi! I'd like to claim your ${item.title}.`,
-            timestamp: new Date().toLocaleTimeString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit',
+            timestamp: new Date().toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
             }),
           },
         ],
@@ -106,18 +121,18 @@ function App() {
     // Show success toast
     setToast({
       message: `Successfully claimed "${item.title}"! The owner will be notified.`,
-      type: 'success',
+      type: "success",
     });
   };
 
   const handleContactUser = (userId: string, itemId?: string) => {
     // If itemId is provided, find or create a message for this item
     if (itemId) {
-      const item = items.find(i => i.id === itemId);
+      const item = items.find((i) => i.id === itemId);
       if (item) {
         // Check if a conversation already exists for this item
         const existingMessage = messages.find(
-          (m) => m.itemId === itemId && m.otherUser.id === userId
+          (m) => m.itemId === itemId && m.otherUser.id === userId,
         );
 
         if (!existingMessage) {
@@ -127,10 +142,10 @@ function App() {
             itemId: item.id,
             item: item,
             otherUser: item.listedBy,
-            lastMessage: '',
-            timestamp: 'Just now',
+            lastMessage: "",
+            timestamp: "Just now",
             unreadCount: 0,
-            status: 'pending',
+            status: "pending",
             isOwner: false,
             messages: [],
           };
@@ -153,17 +168,17 @@ function App() {
                   id: `chat-${Date.now()}`,
                   senderId: currentUser.id,
                   text,
-                  timestamp: new Date().toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
+                  timestamp: new Date().toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
                   }),
                 },
               ],
               lastMessage: text,
-              timestamp: 'Just now',
+              timestamp: "Just now",
             }
-          : msg
-      )
+          : msg,
+      ),
     );
   };
 
@@ -174,24 +189,24 @@ function App() {
         msg.id === messageId
           ? {
               ...msg,
-              status: 'completed' as const,
+              status: "completed" as const,
               messages: [
                 ...msg.messages,
                 {
                   id: `chat-${Date.now()}-system`,
-                  senderId: 'system',
-                  text: 'Pickup has been completed. Please leave feedback for the other user.',
-                  timestamp: new Date().toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
+                  senderId: "system",
+                  text: "Pickup has been completed. Please leave feedback for the other user.",
+                  timestamp: new Date().toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
                   }),
                 },
               ],
-              lastMessage: 'Pickup completed',
-              timestamp: 'Just now',
+              lastMessage: "Pickup completed",
+              timestamp: "Just now",
             }
-          : msg
-      )
+          : msg,
+      ),
     );
 
     // Update item status to 'completed'
@@ -199,14 +214,15 @@ function App() {
       prevItems.map((item) => {
         const message = messages.find((m) => m.id === messageId);
         return message && item.id === message.itemId
-          ? { ...item, status: 'completed' as const }
+          ? { ...item, status: "completed" as const }
           : item;
-      })
+      }),
     );
 
     setToast({
-      message: 'Pickup marked as completed! The claimer will be prompted to leave feedback.',
-      type: 'success',
+      message:
+        "Pickup marked as completed! The claimer will be prompted to leave feedback.",
+      type: "success",
     });
   };
 
@@ -215,7 +231,7 @@ function App() {
     feedback: {
       responseTime: number;
       comment: string;
-    }
+    },
   ) => {
     // Update message to mark owner feedback as given
     setMessages((prevMessages) =>
@@ -225,16 +241,16 @@ function App() {
               ...msg,
               ownerFeedbackGiven: true,
             }
-          : msg
-      )
+          : msg,
+      ),
     );
 
     // In a real app, this would send feedback to the backend
-    console.log('Owner feedback submitted:', feedback);
+    console.log("Owner feedback submitted:", feedback);
 
     setToast({
-      message: 'Thank you for your feedback!',
-      type: 'success',
+      message: "Thank you for your feedback!",
+      type: "success",
     });
   };
 
@@ -245,7 +261,7 @@ function App() {
       packagingQuality: number;
       contentsQuality: number;
       comment: string;
-    }
+    },
   ) => {
     // Update message to mark claimer feedback as given
     setMessages((prevMessages) =>
@@ -254,18 +270,18 @@ function App() {
           ? {
               ...msg,
               claimerFeedbackGiven: true,
-              status: 'feedback-given' as const,
+              status: "feedback-given" as const,
             }
-          : msg
-      )
+          : msg,
+      ),
     );
 
     // In a real app, this would send feedback to the backend
-    console.log('Claimer feedback submitted:', feedback);
+    console.log("Claimer feedback submitted:", feedback);
 
     setToast({
-      message: 'Thank you for your feedback!',
-      type: 'success',
+      message: "Thank you for your feedback!",
+      type: "success",
     });
   };
 
@@ -305,20 +321,33 @@ interface AppContentProps {
   items: FoodItem[];
   messages: Message[];
   selectedItem: FoodItem | null;
-  toast: { message: string; type: 'success' | 'error' | 'info' } | null;
-  currentUser: typeof import('./mockData').currentUser;
+  toast: { message: string; type: "success" | "error" | "info" } | null;
+  currentUser: typeof import("./mockData").currentUser;
   unreadCount: number;
   userItems: FoodItem[];
-  handleAddItem: (newItem: Omit<FoodItem, 'id' | 'listedBy'>) => void;
+  handleAddItem: (newItem: Omit<FoodItem, "id" | "listedBy">) => void;
   handleClaimItem: (itemId: string) => void;
   handleMarkAsClaimed: (itemId: string) => void;
   handleContactUser: (userId: string, itemId?: string) => void;
   handleSendMessage: (messageId: string, text: string) => void;
   handleCompletePickup: (messageId: string) => void;
-  handleSubmitOwnerFeedback: (messageId: string, feedback: { responseTime: number; comment: string }) => void;
-  handleSubmitClaimerFeedback: (messageId: string, feedback: { responseTime: number; packagingQuality: number; contentsQuality: number; comment: string }) => void;
+  handleSubmitOwnerFeedback: (
+    messageId: string,
+    feedback: { responseTime: number; comment: string },
+  ) => void;
+  handleSubmitClaimerFeedback: (
+    messageId: string,
+    feedback: {
+      responseTime: number;
+      packagingQuality: number;
+      contentsQuality: number;
+      comment: string;
+    },
+  ) => void;
   setSelectedItem: (item: FoodItem | null) => void;
-  setToast: (toast: { message: string; type: 'success' | 'error' | 'info' } | null) => void;
+  setToast: (
+    toast: { message: string; type: "success" | "error" | "info" } | null,
+  ) => void;
 }
 
 function AppContent({
@@ -344,7 +373,10 @@ function AppContent({
 
   return (
     <div className="app">
-      <Header onOpenMessages={() => navigate('/messages')} unreadCount={unreadCount} />
+      <Header
+        onOpenMessages={() => navigate("/messages")}
+        unreadCount={unreadCount}
+      />
       <main className="main-content">
         <Routes>
           <Route
@@ -359,25 +391,40 @@ function AppContent({
           />
           <Route
             path="/profile"
-            element={<ProfilePage user={currentUser} userItems={userItems} onMarkAsClaimed={handleMarkAsClaimed} />}
+            element={
+              <ProfilePage
+                user={currentUser}
+                userItems={userItems}
+                onMarkAsClaimed={handleMarkAsClaimed}
+              />
+            }
           />
-          <Route path="/add-item" element={<AddItemPage onAddItem={handleAddItem} />} />
-          <Route path="/item/:itemId" element={
-            <ViewItemPage 
-              items={items} 
-              onClaim={handleClaimItem}
-              onContact={handleContactUser}
-            />
-          } />
-          <Route path="/messages" element={
-            <MessagesPage
-              messages={messages}
-              onSendMessage={handleSendMessage}
-              onCompletePickup={handleCompletePickup}
-              onSubmitOwnerFeedback={handleSubmitOwnerFeedback}
-              onSubmitClaimerFeedback={handleSubmitClaimerFeedback}
-            />
-          } />
+          <Route
+            path="/add-item"
+            element={<AddItemPage onAddItem={handleAddItem} />}
+          />
+          <Route
+            path="/item/:itemId"
+            element={
+              <ViewItemPage
+                items={items}
+                onClaim={handleClaimItem}
+                onContact={handleContactUser}
+              />
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <MessagesPage
+                messages={messages}
+                onSendMessage={handleSendMessage}
+                onCompletePickup={handleCompletePickup}
+                onSubmitOwnerFeedback={handleSubmitOwnerFeedback}
+                onSubmitClaimerFeedback={handleSubmitClaimerFeedback}
+              />
+            }
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

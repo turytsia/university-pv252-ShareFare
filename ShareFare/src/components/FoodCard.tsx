@@ -1,6 +1,6 @@
-import { MapPin, Calendar, Clock, CheckCircle2 } from 'lucide-react';
-import type { FoodItem } from '../types';
-import './FoodCard.css';
+import { MapPin, Calendar, Clock, CheckCircle2 } from "lucide-react";
+import type { FoodItem } from "../types";
+import "./FoodCard.css";
 
 interface FoodCardProps {
   item: FoodItem;

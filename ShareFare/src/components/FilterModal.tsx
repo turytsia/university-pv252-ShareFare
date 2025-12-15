@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { X } from 'lucide-react';
-import type { Filters } from '../types';
-import './FilterModal.css';
+import { useState } from "react";
+import { X } from "lucide-react";
+import type { Filters } from "../types";
+import "./FilterModal.css";
 
 interface FilterModalProps {
   filters: Filters;
@@ -9,7 +9,11 @@ interface FilterModalProps {
   onClose: () => void;
 }
 
-export default function FilterModal({ filters, onApply, onClose }: FilterModalProps) {
+export default function FilterModal({
+  filters,
+  onApply,
+  onClose,
+}: FilterModalProps) {
   const [localFilters, setLocalFilters] = useState(filters);
 
   const handleApply = () => {
@@ -20,7 +24,7 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
   const handleReset = () => {
     const defaultFilters: Filters = {
       maxDistance: 5,
-      pickupTime: 'any',
+      pickupTime: "any",
       dietary: [],
       verifiedOnly: false,
       sealedPackageOnly: false,
@@ -55,7 +59,9 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
           <div className="filter-section">
             <label className="filter-label">
               <span>Maximum Distance</span>
-              <span className="filter-value">{localFilters.maxDistance}+ mi</span>
+              <span className="filter-value">
+                {localFilters.maxDistance}+ mi
+              </span>
             </label>
             <input
               type="range"
@@ -63,7 +69,10 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
               max="10"
               value={localFilters.maxDistance}
               onChange={(e) =>
-                setLocalFilters({ ...localFilters, maxDistance: Number(e.target.value) })
+                setLocalFilters({
+                  ...localFilters,
+                  maxDistance: Number(e.target.value),
+                })
               }
               className="slider"
             />
@@ -76,11 +85,14 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
             <label className="filter-label">Pickup Time</label>
             <div className="radio-group">
               {[
-                { value: 'any', label: 'Any time' },
-                { value: 'today', label: 'Today' },
-                { value: 'tomorrow', label: 'Tomorrow' },
-                { value: 'this-week', label: 'This week' },
-                { value: 'flexible', label: 'Flexible schedule' },
+                { value: "any", label: "Any time" },
+                { value: "today", label: "Today" },
+                { value: "tomorrow", label: "Tomorrow" },
+                { value: "this-week", label: "This week" },
+                {
+                  value: "flexible",
+                  label: "Flexible schedule",
+                },
               ].map((option) => (
                 <label key={option.value} className="radio-label">
                   <input
@@ -89,9 +101,9 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
                     value={option.value}
                     checked={localFilters.pickupTime === option.value}
                     onChange={(e) =>
-                      setLocalFilters({ 
-                        ...localFilters, 
-                        pickupTime: e.target.value as Filters['pickupTime']
+                      setLocalFilters({
+                        ...localFilters,
+                        pickupTime: e.target.value as Filters["pickupTime"],
                       })
                     }
                   />
@@ -104,18 +116,23 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
           <div className="filter-section">
             <label className="filter-label">Dietary Preferences</label>
             <div className="checkbox-grid">
-              {['Spicy', 'Nut-Free', 'Vegan', 'Vegetarian', 'Organic', 'Gluten-Free'].map(
-                (item) => (
-                  <label key={item} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={localFilters.dietary.includes(item)}
-                      onChange={() => toggleDietary(item)}
-                    />
-                    <span>{item}</span>
-                  </label>
-                )
-              )}
+              {[
+                "Spicy",
+                "Nut-Free",
+                "Vegan",
+                "Vegetarian",
+                "Organic",
+                "Gluten-Free",
+              ].map((item) => (
+                <label key={item} className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={localFilters.dietary.includes(item)}
+                    onChange={() => toggleDietary(item)}
+                  />
+                  <span>{item}</span>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -127,7 +144,10 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
                   type="checkbox"
                   checked={localFilters.verifiedOnly}
                   onChange={(e) =>
-                    setLocalFilters({ ...localFilters, verifiedOnly: e.target.checked })
+                    setLocalFilters({
+                      ...localFilters,
+                      verifiedOnly: e.target.checked,
+                    })
                   }
                 />
                 <span>Verified users only</span>
@@ -137,7 +157,10 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
                   type="checkbox"
                   checked={localFilters.sealedPackageOnly}
                   onChange={(e) =>
-                    setLocalFilters({ ...localFilters, sealedPackageOnly: e.target.checked })
+                    setLocalFilters({
+                      ...localFilters,
+                      sealedPackageOnly: e.target.checked,
+                    })
                   }
                 />
                 <span>Only sealed package</span>
@@ -149,7 +172,9 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
             <label className="filter-label">
               <span>Minimum Completion Rate</span>
               <span className="filter-value">
-                {localFilters.minCompletionRate > 0 ? `${localFilters.minCompletionRate}%` : 'Any'}
+                {localFilters.minCompletionRate > 0
+                  ? `${localFilters.minCompletionRate}%`
+                  : "Any"}
               </span>
             </label>
             <input
@@ -159,7 +184,10 @@ export default function FilterModal({ filters, onApply, onClose }: FilterModalPr
               step="5"
               value={localFilters.minCompletionRate}
               onChange={(e) =>
-                setLocalFilters({ ...localFilters, minCompletionRate: Number(e.target.value) })
+                setLocalFilters({
+                  ...localFilters,
+                  minCompletionRate: Number(e.target.value),
+                })
               }
               className="slider"
             />

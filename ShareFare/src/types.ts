@@ -22,7 +22,13 @@ export interface FoodItem {
   title: string;
   description: string;
   quantity: string;
-  category: 'Produce' | 'Dairy' | 'Prepared Food' | 'Pantry' | 'Baked Goods' | 'Other';
+  category:
+    | "Produce"
+    | "Dairy"
+    | "Prepared Food"
+    | "Pantry"
+    | "Baked Goods"
+    | "Other";
   image: string;
   dietaryTags: string[];
   bestBy: string;
@@ -31,7 +37,7 @@ export interface FoodItem {
   distance: number; // in miles
   exactAddress?: string;
   listedBy: User;
-  status: 'available' | 'claimed' | 'completed';
+  status: "available" | "claimed" | "completed";
   claimedBy?: string;
 }
 
@@ -44,7 +50,7 @@ export interface Message {
   timestamp: string;
   unreadCount: number;
   messages: ChatMessage[];
-  status: 'pending' | 'completed' | 'feedback-given';
+  status: "pending" | "completed" | "feedback-given";
   isOwner: boolean; // Is the current user the owner of the item
   ownerFeedbackGiven?: boolean; // Has the owner submitted their feedback
   claimerFeedbackGiven?: boolean; // Has the claimer submitted their feedback
@@ -55,7 +61,7 @@ export interface ChatMessage {
   senderId: string;
   text: string;
   timestamp: string;
-  type?: 'system' | 'user';
+  type?: "system" | "user";
 }
 
 export interface Feedback {
@@ -68,11 +74,18 @@ export interface Feedback {
   comment?: string;
 }
 
-export type CategoryFilter = 'All' | 'Produce' | 'Dairy' | 'Prepared Food' | 'Pantry' | 'Baked Goods' | 'Other';
+export type CategoryFilter =
+  | "All"
+  | "Produce"
+  | "Dairy"
+  | "Prepared Food"
+  | "Pantry"
+  | "Baked Goods"
+  | "Other";
 
 export interface Filters {
   maxDistance: number;
-  pickupTime: 'any' | 'today' | 'tomorrow' | 'this-week' | 'flexible';
+  pickupTime: "any" | "today" | "tomorrow" | "this-week" | "flexible";
   dietary: string[];
   verifiedOnly: boolean;
   sealedPackageOnly: boolean;

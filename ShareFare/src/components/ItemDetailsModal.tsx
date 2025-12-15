@@ -1,7 +1,14 @@
-import { X, MapPin, Calendar, Clock, CheckCircle2, MessageCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import type { FoodItem } from '../types';
-import './ItemDetailsModal.css';
+import {
+  X,
+  MapPin,
+  Calendar,
+  Clock,
+  CheckCircle2,
+  MessageCircle,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import type { FoodItem } from "../types";
+import "./ItemDetailsModal.css";
 
 interface ItemDetailsModalProps {
   item: FoodItem;
@@ -10,7 +17,12 @@ interface ItemDetailsModalProps {
   onContact: (userId: string, itemId?: string) => void;
 }
 
-export default function ItemDetailsModal({ item, onClose, onClaim, onContact }: ItemDetailsModalProps) {
+export default function ItemDetailsModal({
+  item,
+  onClose,
+  onClaim,
+  onContact,
+}: ItemDetailsModalProps) {
   const navigate = useNavigate();
 
   const handleContact = () => {
@@ -91,7 +103,9 @@ export default function ItemDetailsModal({ item, onClose, onClaim, onContact }: 
                     <CheckCircle2 size={16} className="verified-icon" />
                   )}
                 </div>
-                <div className="user-card-location">{item.listedBy.location}</div>
+                <div className="user-card-location">
+                  {item.listedBy.location}
+                </div>
                 <div className="user-card-stats">
                   <span className="stat-item">
                     <span className="stat-icon">✓</span>
@@ -111,19 +125,19 @@ export default function ItemDetailsModal({ item, onClose, onClaim, onContact }: 
             <span className="remember-icon">💡</span>
             <div>
               <strong>Remember:</strong>
-              <p>Be respectful, show up on time, and communicate any changes promptly.</p>
+              <p>
+                Be respectful, show up on time, and communicate any changes
+                promptly.
+              </p>
             </div>
           </div>
 
           <div className="item-modal-actions">
-            <button 
-              className="contact-btn"
-              onClick={handleContact}
-            >
+            <button className="contact-btn" onClick={handleContact}>
               <MessageCircle size={20} />
               Contact
             </button>
-            <button 
+            <button
               className="claim-btn-large"
               onClick={() => {
                 onClaim(item.id);

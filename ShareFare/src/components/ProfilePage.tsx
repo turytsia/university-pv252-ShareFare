@@ -1,7 +1,17 @@
-import { Settings, Package, Heart, TrendingUp, Award, MapPin, Clock, CheckCircle2, Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import type { User, FoodItem } from '../types';
-import './ProfilePage.css';
+import {
+  Settings,
+  Package,
+  Heart,
+  TrendingUp,
+  Award,
+  MapPin,
+  Clock,
+  CheckCircle2,
+  Calendar,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import type { User, FoodItem } from "../types";
+import "./ProfilePage.css";
 
 interface ProfilePageProps {
   user: User;
@@ -9,9 +19,13 @@ interface ProfilePageProps {
   onMarkAsClaimed?: (itemId: string) => void;
 }
 
-export default function ProfilePage({ user, userItems, onMarkAsClaimed }: ProfilePageProps) {
+export default function ProfilePage({
+  user,
+  userItems,
+  onMarkAsClaimed,
+}: ProfilePageProps) {
   const navigate = useNavigate();
-  const activeItems = userItems.filter(item => item.status === 'available');
+  const activeItems = userItems.filter((item) => item.status === "available");
 
   const handleEdit = (itemId: string) => {
     // Navigate to the item view page where they can see details
@@ -96,16 +110,21 @@ export default function ProfilePage({ user, userItems, onMarkAsClaimed }: Profil
         <Award size={20} />
         <div>
           <strong>Community Impact</strong>
-          <p>You're in the top 15% of contributors this month! Keep up the amazing work.</p>
+          <p>
+            You're in the top 15% of contributors this month! Keep up the
+            amazing work.
+          </p>
         </div>
       </div>
 
       <div className="progress-section">
         <h3>Progress to next level</h3>
         <div className="progress-bar">
-          <div className="progress-fill" style={{ width: '85%' }}></div>
+          <div className="progress-fill" style={{ width: "85%" }}></div>
         </div>
-        <p className="progress-text">Share 6 more items to reach "Community Champion" status!</p>
+        <p className="progress-text">
+          Share 6 more items to reach "Community Champion" status!
+        </p>
       </div>
 
       <div className="listings-section">
@@ -129,10 +148,16 @@ export default function ProfilePage({ user, userItems, onMarkAsClaimed }: Profil
                   <span>Best by {item.bestBy}</span>
                 </div>
                 <div className="listing-actions">
-                  <button className="edit-btn" onClick={() => handleEdit(item.id)}>
+                  <button
+                    className="edit-btn"
+                    onClick={() => handleEdit(item.id)}
+                  >
                     Edit
                   </button>
-                  <button className="mark-claimed-btn" onClick={() => handleMarkAsClaimed(item.id)}>
+                  <button
+                    className="mark-claimed-btn"
+                    onClick={() => handleMarkAsClaimed(item.id)}
+                  >
                     Mark as Claimed
                   </button>
                 </div>
