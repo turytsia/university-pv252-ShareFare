@@ -14,3 +14,6 @@ jobs:
       - name: Run ESLint
         working-directory: ShareFare
         run: npm run lint
+      - name: Run Prettier
+        working-directory: ShareFare
+        run: npm run format:check
