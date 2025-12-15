@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Dot } from "lucide-react";
 import "./LoginPage.css";
 
 interface LoginPageProps {
@@ -119,7 +119,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           <p className="terms-text">
             By continuing, you agree to ShareFare's
             <br />
-            <a href="#">Terms of Service</a> • <a href="#">Privacy Policy</a>
+            <span className="terms-text-links">
+              <a href="#">Terms of Service</a>
+              <span className="dot-icon">
+                <Dot />
+              </span>
+              <a href="#">Privacy Policy</a>
+            </span>
           </p>
         </div>
       </div>

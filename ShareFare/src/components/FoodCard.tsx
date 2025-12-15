@@ -1,4 +1,4 @@
-import { MapPin, Calendar, Clock, CheckCircle2 } from "lucide-react";
+import { MapPin, Calendar, Clock, CheckCircle2, Dot } from "lucide-react";
 import type { FoodItem } from "../types";
 import "./FoodCard.css";
 import VerifiedBadge from "./VerifiedBadge";
@@ -58,7 +58,9 @@ export default function FoodCard({ item, onClaim, onView }: FoodCardProps) {
                 <span className="completion-rate">
                   {item.listedBy.completionRate}% completion
                 </span>
-                <span className="dot">•</span>
+                <span className="dot-icon">
+                  <Dot />
+                </span>
                 <span className="response-time">
                   Responds {item.listedBy.responseTime}
                 </span>

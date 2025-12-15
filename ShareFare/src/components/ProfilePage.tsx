@@ -8,6 +8,7 @@ import {
   Clock,
   CheckCircle2,
   Calendar,
+  Dot,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { User, FoodItem } from "../types";
@@ -59,7 +60,9 @@ export default function ProfilePage({
         <div className="profile-location">
           <MapPin size={14} />
           <span>{user.location}</span>
-          <span className="dot">•</span>
+          <span className="dot-icon">
+            <Dot />
+          </span>
           <span>Member since {user.memberSince}</span>
         </div>
         <p className="profile-bio">{user.bio}</p>
@@ -144,7 +147,9 @@ export default function ProfilePage({
                 <div className="listing-meta">
                   <Calendar size={14} />
                   <span>Today 4-7pm</span>
-                  <span className="dot">•</span>
+                  <span className="dot-icon">
+                    <Dot />
+                  </span>
                   <span>Best by {item.bestBy}</span>
                 </div>
                 <div className="listing-actions">
