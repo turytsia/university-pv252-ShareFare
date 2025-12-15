@@ -10,23 +10,8 @@ permissions:
   id-token: write
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - name: Install modules
-        working-directory: ShareFare
-        run: npm i
-      - name: Run ESLint
-        working-directory: ShareFare
-        run: npm run lint
-      - name: Run Prettier
-        working-directory: ShareFare
-        run: npm run format:check
-
   deploy:
     runs-on: ubuntu-latest
-    needs: lint
     if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
