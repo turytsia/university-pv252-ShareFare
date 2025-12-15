@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { FoodItem, SortOption } from "../types/items";
-import type { CategoryFilter, Filters } from "../types/filters";
+import type { Filters } from "../types/filters";
 import { sortFoodItems } from "../types/items";
 import FoodCard from "../components/FoodCard.tsx";
 import FilterModal from "../components/FilterModal.tsx";
@@ -13,24 +13,13 @@ interface MyListingsPageProps {
   onViewItem: (item: FoodItem) => void;
 }
 
-const categories: CategoryFilter[] = [
-  "All",
-  "Produce",
-  "Dairy",
-  "Prepared Food",
-  "Pantry",
-  "Baked Goods",
-  "Other",
-];
-
 export default function MyListingsPage({ items }: MyListingsPageProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] =
-    useState<CategoryFilter>("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<Filters>({
+    categories: ["All"],
     maxDistance: 5,
     pickupTime: "any",
     dietary: [],
@@ -46,7 +35,9 @@ export default function MyListingsPage({ items }: MyListingsPageProps) {
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory =
-        selectedCategory === "All" || item.category === selectedCategory;
+        filters.categories.length === 0 ||
+        filters.categories.includes("All") ||
+        filters.categories.includes(item.category);
       const matchesDistance = item.distance <= filters.maxDistance;
       const matchesVerified = !filters.verifiedOnly || item.listedBy.verified;
       const matchesCompletion =
@@ -62,7 +53,7 @@ export default function MyListingsPage({ items }: MyListingsPageProps) {
     });
 
     return sortFoodItems(base, sortBy);
-  }, [items, searchQuery, selectedCategory, filters, sortBy]);
+  }, [items, searchQuery, filters, sortBy]);
 
   return (
     <div className="home-page">
@@ -77,22 +68,9 @@ export default function MyListingsPage({ items }: MyListingsPageProps) {
           />
         </div>
         <button className="filter-btn" onClick={() => setShowFilters(true)}>
-          <SlidersHorizontal size={20} />
+          <SlidersHorizontal size={18} />
+          <span>Filters</span>
         </button>
-      </div>
-
-      <div className="category-filters">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={`category-btn ${
-              selectedCategory === category ? "active" : ""
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
       </div>
 
       <div className="results-header">

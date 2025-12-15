@@ -8,6 +8,7 @@ export type CategoryFilter =
   | "Other";
 
 export interface Filters {
+  categories: CategoryFilter[];
   maxDistance: number;
   pickupTime: "any" | "today" | "tomorrow" | "this-week" | "flexible";
   dietary: string[];

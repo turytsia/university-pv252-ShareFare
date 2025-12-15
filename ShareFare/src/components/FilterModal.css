@@ -70,6 +70,30 @@
   flex: 1;
 }
 
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--gray-300);
+  background: white;
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chip.active {
+  background: var(--primary-green-600);
+  border-color: var(--primary-green-600);
+  color: white;
+}
+
 .filter-section {
   margin-bottom: 2rem;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import type { Filters } from "../types/filters";
+import type { CategoryFilter, Filters } from "../types/filters";
 import "./FilterModal.css";
 
 interface FilterModalProps {
@@ -23,6 +23,7 @@ export default function FilterModal({
 
   const handleReset = () => {
     const defaultFilters: Filters = {
+      categories: ["All"],
       maxDistance: 5,
       pickupTime: "any",
       dietary: [],
@@ -42,6 +43,28 @@ export default function FilterModal({
     }));
   };
 
+  const toggleCategory = (category: CategoryFilter) => {
+    setLocalFilters((prev) => {
+      // Clicking "All" resets to all categories
+      if (category === "All") {
+        return { ...prev, categories: ["All"] };
+      }
+
+      const current = prev.categories.filter((c) => c !== "All");
+      const exists = current.includes(category);
+      const next = exists
+        ? current.filter((c) => c !== category)
+        : [...current, category];
+
+      // If nothing selected, fall back to "All"
+      if (next.length === 0) {
+        return { ...prev, categories: ["All"] };
+      }
+
+      return { ...prev, categories: next };
+    });
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -56,6 +79,41 @@ export default function FilterModal({
         </div>
 
         <div className="modal-body">
+          <div className="filter-section">
+            <label className="filter-label">Category</label>
+            <div className="chip-group">
+              {(
+                [
+                  "All",
+                  "Produce",
+                  "Dairy",
+                  "Prepared Food",
+                  "Pantry",
+                  "Baked Goods",
+                  "Other",
+                ] as CategoryFilter[]
+              ).map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className={`chip ${
+                    category === "All"
+                      ? localFilters.categories.length === 0 ||
+                        localFilters.categories.includes("All")
+                        ? "active"
+                        : ""
+                      : localFilters.categories.includes(category)
+                        ? "active"
+                        : ""
+                  }`}
+                  onClick={() => toggleCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="filter-section">
             <label className="filter-label">
               <span>Maximum Distance</span>
