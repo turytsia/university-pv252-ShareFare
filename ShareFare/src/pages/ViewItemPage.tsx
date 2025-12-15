@@ -8,7 +8,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { FoodItem } from "../types";
+import type { FoodItem } from "../types/items";
 import "./ViewItemPage.css";
 import VerifiedBadge from "../components/VerifiedBadge";
 import { currentUser } from "../mockData";

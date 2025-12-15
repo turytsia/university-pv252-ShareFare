@@ -1,4 +1,6 @@
-import type { User, FoodItem, Message } from "./types";
+import type { User } from "./types/user";
+import type { FoodItem } from "./types/items";
+import type { Message } from "./types/messages";
 
 // Mock current user
 export const currentUser: User = {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import type { Filters } from "../types";
+import type { Filters } from "../types/filters";
 import "./FilterModal.css";
 
 interface FilterModalProps {

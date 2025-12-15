@@ -17,7 +17,8 @@ import MessagesPage from "./pages/MessagesPage";
 import ItemDetailsModal from "./components/ItemDetailsModal";
 import Toast from "./components/Toast";
 import { currentUser, mockFoodItems, mockMessages } from "./mockData";
-import type { FoodItem, Message } from "./types";
+import type { FoodItem } from "./types/items";
+import type { Message } from "./types/messages";
 import "./App.css";
 
 function App() {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { FoodItem } from "../types";
+import type { FoodItem } from "../types/items";
 import "./AddItemPage.css";
 
 interface AddItemPageProps {

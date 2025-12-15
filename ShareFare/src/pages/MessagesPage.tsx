@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Send } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import type { Message as MessageType } from "../types";
+import type { Message as MessageType } from "../types/messages";
 import ConfirmModal from "../components/ConfirmModal";
 import FeedbackModal from "../components/FeedbackModal";
 import OwnerFeedbackModal from "../components/OwnerFeedbackModal";
@@ -187,79 +187,79 @@ export default function MessagesPage({
             )}
 
           <div className="chat-view">
-          <div className="chat-header">
-            <button
-              className="back-btn"
-              onClick={() => setSelectedMessageId(null)}
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div className="chat-header-info">
-              <img
-                src={selectedMessage.otherUser.avatar}
-                alt={selectedMessage.otherUser.name}
-              />
-              <div>
-                <h3>{selectedMessage.otherUser.name}</h3>
-                <p>
-                  Usually responds in {selectedMessage.otherUser.responseTime}
-                </p>
+            <div className="chat-header">
+              <button
+                className="back-btn"
+                onClick={() => setSelectedMessageId(null)}
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <div className="chat-header-info">
+                <img
+                  src={selectedMessage.otherUser.avatar}
+                  alt={selectedMessage.otherUser.name}
+                />
+                <div>
+                  <h3>{selectedMessage.otherUser.name}</h3>
+                  <p>
+                    Usually responds in {selectedMessage.otherUser.responseTime}
+                  </p>
+                </div>
+              </div>
+              <div className="chat-header-actions">
+                {selectedMessage.isOwner &&
+                  selectedMessage.status === "pending" && (
+                    <button
+                      className="complete-pickup-btn"
+                      onClick={() => setShowConfirmModal(true)}
+                    >
+                      Complete Pickup
+                    </button>
+                  )}
+                <button
+                  className="view-item-btn"
+                  onClick={() => navigate(`/item/${selectedMessage.item.id}`)}
+                >
+                  View Item
+                </button>
               </div>
             </div>
-            <div className="chat-header-actions">
-              {selectedMessage.isOwner &&
-                selectedMessage.status === "pending" && (
-                  <button
-                    className="complete-pickup-btn"
-                    onClick={() => setShowConfirmModal(true)}
-                  >
-                    Complete Pickup
-                  </button>
-                )}
+
+            <div className="chat-messages">
+              {selectedMessage.messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`chat-message ${
+                    msg.senderId === "system"
+                      ? "system"
+                      : msg.senderId === "user-1"
+                        ? "sent"
+                        : "received"
+                  }`}
+                >
+                  <div className="message-bubble">{msg.text}</div>
+                  <span className="message-timestamp">{msg.timestamp}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="chat-input">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={messageText}
+                onChange={(e) => setMessageText(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleSend()}
+              />
               <button
-                className="view-item-btn"
-                onClick={() => navigate(`/item/${selectedMessage.item.id}`)}
+                className="send-btn"
+                onClick={handleSend}
+                disabled={!messageText.trim()}
               >
-                View Item
+                <Send size={20} />
               </button>
             </div>
           </div>
-
-          <div className="chat-messages">
-            {selectedMessage.messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`chat-message ${
-                  msg.senderId === "system"
-                    ? "system"
-                    : msg.senderId === "user-1"
-                      ? "sent"
-                      : "received"
-                }`}
-              >
-                <div className="message-bubble">{msg.text}</div>
-                <span className="message-timestamp">{msg.timestamp}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="chat-input">
-            <input
-              type="text"
-              placeholder="Type a message..."
-              value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSend()}
-            />
-            <button
-              className="send-btn"
-              onClick={handleSend}
-              disabled={!messageText.trim()}
-            >
-              <Send size={20} />
-            </button>
-          </div>
-        </div>
         </>
       )}
 

@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { CategoryFilter, Filters, FoodItem } from "../types";
+import type { FoodItem, SortOption } from "../types/items";
+import type { CategoryFilter, Filters } from "../types/filters";
+import { sortFoodItems } from "../types/items";
 import FoodCard from "../components/FoodCard.tsx";
 import FilterModal from "../components/FilterModal.tsx";
 import "./HomePage.css";
@@ -36,26 +38,31 @@ export default function MyListingsPage({ items }: MyListingsPageProps) {
     sealedPackageOnly: false,
     minCompletionRate: 0,
   });
+  const [sortBy, setSortBy] = useState<SortOption>("relevance");
 
-  const filteredItems = items.filter((item) => {
-    const matchesSearch =
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || item.category === selectedCategory;
-    const matchesDistance = item.distance <= filters.maxDistance;
-    const matchesVerified = !filters.verifiedOnly || item.listedBy.verified;
-    const matchesCompletion =
-      item.listedBy.completionRate >= filters.minCompletionRate;
+  const filteredItems = useMemo(() => {
+    const base = items.filter((item) => {
+      const matchesSearch =
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "All" || item.category === selectedCategory;
+      const matchesDistance = item.distance <= filters.maxDistance;
+      const matchesVerified = !filters.verifiedOnly || item.listedBy.verified;
+      const matchesCompletion =
+        item.listedBy.completionRate >= filters.minCompletionRate;
 
-    return (
-      matchesSearch &&
-      matchesCategory &&
-      matchesDistance &&
-      matchesVerified &&
-      matchesCompletion
-    );
-  });
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesDistance &&
+        matchesVerified &&
+        matchesCompletion
+      );
+    });
+
+    return sortFoodItems(base, sortBy);
+  }, [items, searchQuery, selectedCategory, filters, sortBy]);
 
   return (
     <div className="home-page">
@@ -92,19 +99,34 @@ export default function MyListingsPage({ items }: MyListingsPageProps) {
         <p className="results-count">
           {filteredItems.length} items you've listed
         </p>
-        <div className="view-toggle">
-          <button
-            className={`view-btn ${viewMode === "grid" ? "active" : ""}`}
-            onClick={() => setViewMode("grid")}
-          >
-            <Grid size={20} />
-          </button>
-          <button
-            className={`view-btn ${viewMode === "list" ? "active" : ""}`}
-            onClick={() => setViewMode("list")}
-          >
-            <List size={20} />
-          </button>
+        <div className="results-controls">
+          <div className="sort-select-wrapper">
+            <label htmlFor="sort-select-my-listings">Sort by</label>
+            <select
+              id="sort-select-my-listings"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+            >
+              <option value="relevance">Relevance</option>
+              <option value="distance">Distance</option>
+              <option value="best-by">Best by date</option>
+              <option value="recent">Newest first</option>
+            </select>
+          </div>
+          <div className="view-toggle">
+            <button
+              className={`view-btn ${viewMode === "grid" ? "active" : ""}`}
+              onClick={() => setViewMode("grid")}
+            >
+              <Grid size={20} />
+            </button>
+            <button
+              className={`view-btn ${viewMode === "list" ? "active" : ""}`}
+              onClick={() => setViewMode("list")}
+            >
+              <List size={20} />
+            </button>
+          </div>
         </div>
       </div>
 

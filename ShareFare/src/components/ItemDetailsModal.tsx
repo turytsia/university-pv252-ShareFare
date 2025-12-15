@@ -1,6 +1,6 @@
 import { X, MapPin, Calendar, Clock, MessageCircle, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { FoodItem } from "../types";
+import type { FoodItem } from "../types/items";
 import "./ItemDetailsModal.css";
 import VerifiedBadge from "./VerifiedBadge";
 

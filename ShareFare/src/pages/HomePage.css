@@ -102,6 +102,29 @@
   margin: 0;
 }
 
+.results-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sort-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.sort-select-wrapper select {
+  border-radius: 999px;
+  border: 1px solid var(--gray-300);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background: white;
+  color: var(--gray-800);
+}
+
 .view-toggle {
   display: flex;
   gap: 0.5rem;

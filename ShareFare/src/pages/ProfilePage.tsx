@@ -11,7 +11,8 @@ import {
   Dot,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { User, FoodItem } from "../types";
+import type { User } from "../types/user";
+import type { FoodItem } from "../types/items";
 import "./ProfilePage.css";
 
 interface ProfilePageProps {
