@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import type { CategoryFilter, Filters } from "../types/filters";
+import { DIETARY_TAGS } from "../constants/dietaryTags";
 import "./FilterModal.css";
 
 interface FilterModalProps {
@@ -174,14 +175,7 @@ export default function FilterModal({
           <div className="filter-section">
             <label className="filter-label">Dietary Preferences</label>
             <div className="checkbox-grid">
-              {[
-                "Spicy",
-                "Nut-Free",
-                "Vegan",
-                "Vegetarian",
-                "Organic",
-                "Gluten-Free",
-              ].map((item) => (
+              {DIETARY_TAGS.map((item) => (
                 <label key={item} className="checkbox-label">
                   <input
                     type="checkbox"

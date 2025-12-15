@@ -312,4 +312,50 @@ export const mockMessages: Message[] = [
       },
     ],
   },
+  {
+    id: "msg-5",
+    itemId: "item-3",
+    item: mockFoodItems[2], // Milk & Yogurt owned by Emma John (user-3)
+    otherUser: users[2], // Emma John
+    lastMessage: "Thank you for your feedback!",
+    timestamp: "1d ago",
+    unreadCount: 0,
+    status: "completed",
+    isOwner: false, // Sarah is the claimer, not the owner
+    ownerFeedbackGiven: true, // Emma John (owner) already gave feedback
+    claimerFeedbackGiven: true, // Sarah already gave feedback too
+    messages: [
+      {
+        id: "chat-13",
+        senderId: "user-1",
+        text: "Hi! Is the milk and yogurt still available?",
+        timestamp: "Yesterday 2:00 PM",
+      },
+      {
+        id: "chat-14",
+        senderId: "user-3",
+        text: "Yes! When can you pick it up?",
+        timestamp: "Yesterday 2:05 PM",
+      },
+      {
+        id: "chat-15",
+        senderId: "user-1",
+        text: "I can come today around 6pm?",
+        timestamp: "Yesterday 2:10 PM",
+      },
+      {
+        id: "chat-16",
+        senderId: "user-3",
+        text: "Perfect! See you then.",
+        timestamp: "Yesterday 2:15 PM",
+      },
+      {
+        id: "chat-17",
+        senderId: "system",
+        text: "Pickup has been completed. Please leave feedback for the other user.",
+        timestamp: "Yesterday 6:30 PM",
+      },
+    ],
+  },
 ];
+

@@ -226,21 +226,36 @@ export default function MessagesPage({
             </div>
 
             <div className="chat-messages">
-              {selectedMessage.messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`chat-message ${
-                    msg.senderId === "system"
-                      ? "system"
-                      : msg.senderId === "user-1"
-                        ? "sent"
-                        : "received"
-                  }`}
-                >
-                  <div className="message-bubble">{msg.text}</div>
-                  <span className="message-timestamp">{msg.timestamp}</span>
-                </div>
-              ))}
+              {selectedMessage.messages.map((msg) => {
+                // Determine the message text for system messages
+                let messageText = msg.text;
+                if (msg.senderId === "system" && msg.text.includes("Pickup has been completed")) {
+                  // Check if the current user has already given feedback
+                  const userHasGivenFeedback = selectedMessage.isOwner
+                    ? selectedMessage.ownerFeedbackGiven
+                    : selectedMessage.claimerFeedbackGiven;
+                  
+                  messageText = userHasGivenFeedback
+                    ? "Thank you for your feedback!"
+                    : "Pickup has been completed. Please leave feedback for the other user.";
+                }
+
+                return (
+                  <div
+                    key={msg.id}
+                    className={`chat-message ${
+                      msg.senderId === "system"
+                        ? "system"
+                        : msg.senderId === "user-1"
+                          ? "sent"
+                          : "received"
+                    }`}
+                  >
+                    <div className="message-bubble">{messageText}</div>
+                    <span className="message-timestamp">{msg.timestamp}</span>
+                  </div>
+                );
+              })}
             </div>
 
             <div className="chat-input">

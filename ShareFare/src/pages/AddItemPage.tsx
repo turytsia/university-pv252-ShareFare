@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { FoodItem } from "../types/items";
+import { DIETARY_TAGS } from "../constants/dietaryTags";
 import "./AddItemPage.css";
 
 interface AddItemPageProps {
@@ -15,7 +16,17 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
     category: "",
     quantity: "",
     description: "",
+    dietaryTags: [] as string[],
   });
+
+  const toggleDietaryTag = (tag: string) => {
+    setFormData({
+      ...formData,
+      dietaryTags: formData.dietaryTags.includes(tag)
+        ? formData.dietaryTags.filter((t) => t !== tag)
+        : [...formData.dietaryTags, tag],
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +39,7 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
       category: formData.category as FoodItem["category"],
       image:
         "https://images.unsplash.com/photo-1495195134817-aeb325a55b65?w=500&q=80", // Default placeholder image
-      dietaryTags: [],
+      dietaryTags: formData.dietaryTags,
       bestBy: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(
         "en-US",
         { month: "short", day: "numeric" },
@@ -139,6 +150,25 @@ export default function AddItemPage({ onAddItem }: AddItemPageProps) {
               }
               rows={4}
             />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Dietary Tags (Optional)</label>
+            <div className="dietary-tags-grid">
+              {DIETARY_TAGS.map((tag) => (
+                <label key={tag} className="dietary-tag-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={formData.dietaryTags.includes(tag)}
+                    onChange={() => toggleDietaryTag(tag)}
+                  />
+                  <span>{tag}</span>
+                </label>
+              ))}
+            </div>
+            <p className="form-hint">
+              Select tags that describe your food item
+            </p>
           </div>
         </div>
 

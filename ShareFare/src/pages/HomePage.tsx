@@ -45,6 +45,11 @@ export default function HomePage({
       const matchesVerified = !filters.verifiedOnly || item.listedBy.verified;
       const matchesCompletion =
         item.listedBy.completionRate >= filters.minCompletionRate;
+      
+      // Check if item has all selected dietary tags
+      const matchesDietary =
+        filters.dietary.length === 0 ||
+        filters.dietary.every((tag) => item.dietaryTags.includes(tag));
 
       return (
         matchesSearch &&
@@ -52,6 +57,7 @@ export default function HomePage({
         matchesDistance &&
         matchesVerified &&
         matchesCompletion &&
+        matchesDietary &&
         item.status === "available"
       );
     });
@@ -115,11 +121,9 @@ export default function HomePage({
       <div className={`items-grid ${viewMode}`}>
         {filteredItems.map((item) => (
           <FoodCard
-            key={item.id}
             item={item}
             onView={onViewItem}
-            actionLabel="Claim Item"
-            onAction={onClaimItem}
+            onClaim={onClaimItem}
           />
         ))}
       </div>

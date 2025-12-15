@@ -42,13 +42,19 @@ export default function MyListingsPage({ items }: MyListingsPageProps) {
       const matchesVerified = !filters.verifiedOnly || item.listedBy.verified;
       const matchesCompletion =
         item.listedBy.completionRate >= filters.minCompletionRate;
+      
+      // Check if item has all selected dietary tags
+      const matchesDietary =
+        filters.dietary.length === 0 ||
+        filters.dietary.every((tag) => item.dietaryTags.includes(tag));
 
       return (
         matchesSearch &&
         matchesCategory &&
         matchesDistance &&
         matchesVerified &&
-        matchesCompletion
+        matchesCompletion &&
+        matchesDietary
       );
     });
 
@@ -114,7 +120,7 @@ export default function MyListingsPage({ items }: MyListingsPageProps) {
             key={item.id}
             item={item}
             onView={() => navigate(`/item/${item.id}`)}
-            showAuthor={false}
+            showClaimButton={false}
           />
         ))}
       </div>

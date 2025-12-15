@@ -145,6 +145,48 @@
   line-height: 1.5;
 }
 
+.dietary-tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.dietary-tag-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+
+.dietary-tag-checkbox:hover {
+  border-color: var(--primary-green-600);
+  background: var(--gray-50);
+}
+
+.dietary-tag-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary-green-600);
+}
+
+.dietary-tag-checkbox input[type="checkbox"]:checked + span {
+  font-weight: 500;
+  color: var(--primary-green-600);
+}
+
+.dietary-tag-checkbox span {
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  user-select: none;
+}
+
 .form-actions {
   display: flex;
   gap: 1rem;

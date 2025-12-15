@@ -2,8 +2,7 @@
 
 ShareFare is a simple web app where users can list surplus groceries or homemade
 items they want to give away. Others can browse or search for listings, claim
-them, and track donation history. Focus on building trust and clarity between
-donors and recipients.
+them, and track donation history. The app is focused on building trust and clarity between donors and recipients.
 
 ## Project structures
 

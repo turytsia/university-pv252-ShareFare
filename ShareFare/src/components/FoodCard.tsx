@@ -4,11 +4,12 @@ import "./FoodCard.css";
 
 interface FoodCardProps {
   item: FoodItem;
-  onClaim: (itemId: string) => void;
+  onClaim?: (itemId: string) => void;
   onView: (item: FoodItem) => void;
+  showClaimButton?: boolean;
 }
 
-export default function FoodCard({ item, onClaim, onView }: FoodCardProps) {
+export default function FoodCard({ item, onClaim, onView, showClaimButton = true }: FoodCardProps) {
   return (
     <div className="food-card" onClick={() => onView(item)}>
       <div className="food-card-image">
@@ -67,15 +68,17 @@ export default function FoodCard({ item, onClaim, onView }: FoodCardProps) {
             </div>
           </div>
 
-          <button
-            className="claim-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClaim(item.id);
-            }}
-          >
-            Claim Item
-          </button>
+          {showClaimButton && onClaim && (
+            <button
+              className="claim-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClaim(item.id);
+              }}
+            >
+              Claim Item
+            </button>
+          )}
         </div>
       </div>
     </div>
