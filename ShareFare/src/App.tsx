@@ -286,6 +286,14 @@ function App() {
     });
   };
 
+  const handleOpenMessage = (messageId: string) => {
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === messageId ? { ...msg, unreadCount: 0 } : msg,
+      ),
+    );
+  };
+
   const handleUpdateItem = (updatedItem: FoodItem) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
@@ -331,6 +339,7 @@ function App() {
         handleCompletePickup={handleCompletePickup}
         handleSubmitOwnerFeedback={handleSubmitOwnerFeedback}
         handleSubmitClaimerFeedback={handleSubmitClaimerFeedback}
+        handleOpenMessage={handleOpenMessage}
         handleUpdateItem={handleUpdateItem}
         setSelectedItem={setSelectedItem}
         setToast={setToast}
@@ -366,6 +375,7 @@ interface AppContentProps {
       comment: string;
     },
   ) => void;
+  handleOpenMessage: (messageId: string) => void;
   handleUpdateItem: (item: FoodItem) => void;
   setSelectedItem: (item: FoodItem | null) => void;
   setToast: (
@@ -389,6 +399,7 @@ function AppContent({
   handleCompletePickup,
   handleSubmitOwnerFeedback,
   handleSubmitClaimerFeedback,
+  handleOpenMessage,
   handleUpdateItem,
   setSelectedItem,
   setToast,
@@ -453,6 +464,7 @@ function AppContent({
                 onCompletePickup={handleCompletePickup}
                 onSubmitOwnerFeedback={handleSubmitOwnerFeedback}
                 onSubmitClaimerFeedback={handleSubmitClaimerFeedback}
+                onOpenMessage={handleOpenMessage}
               />
             }
           />

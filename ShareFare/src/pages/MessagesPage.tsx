@@ -27,6 +27,7 @@ interface MessagesPageProps {
       comment: string;
     },
   ) => void;
+  onOpenMessage: (messageId: string) => void;
 }
 
 export default function MessagesPage({
@@ -35,6 +36,7 @@ export default function MessagesPage({
   onCompletePickup,
   onSubmitOwnerFeedback,
   onSubmitClaimerFeedback,
+  onOpenMessage,
 }: MessagesPageProps) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -71,6 +73,13 @@ export default function MessagesPage({
   const selectedMessage = selectedMessageId
     ? messages.find((m) => m.id === selectedMessageId) || null
     : null;
+
+  // Mark message as read when it becomes the selected conversation
+  useEffect(() => {
+    if (selectedMessage && selectedMessage.unreadCount > 0) {
+      onOpenMessage(selectedMessage.id);
+    }
+  }, [selectedMessage, onOpenMessage]);
 
   const handleSend = () => {
     if (messageText.trim() && selectedMessage) {
