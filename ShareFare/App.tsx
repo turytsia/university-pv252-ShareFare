@@ -26,7 +26,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/item/:id" element={<ItemDetail />} />
-        <Route path="/messages" element={<Messages />} />
+        <Route path="/messages/:conversationId?" element={<Messages />} />
         <Route path="/add" element={<AddItem />} />
         <Route path="/edit/:id" element={<AddItem />} />
         <Route path="/profile" element={<Profile />} />

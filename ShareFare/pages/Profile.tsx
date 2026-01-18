@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { Button } from '../components/Button';
+import { StatsCard } from '../components/StatsCard';
+import { ProfileItemCard } from '../components/ProfileItemCard';
 import { ItemStatus } from '../types';
 
 export const Profile = () => {
@@ -84,26 +86,10 @@ export const Profile = () => {
          <p className="mt-6 text-gray-600 text-sm max-w-2xl">{editBio}</p>
 
          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-            <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-100">
-               <div className="text-green-600 mb-1"><Leaf className="w-6 h-6 mx-auto"/></div>
-               <div className="text-2xl font-bold text-gray-900">{currentUser.stats.shared}</div>
-               <div className="text-xs text-gray-500">Items Shared</div>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-100">
-               <div className="text-red-500 mb-1"><ThumbsUp className="w-6 h-6 mx-auto"/></div>
-               <div className="text-2xl font-bold text-gray-900">{currentUser.stats.helped}</div>
-               <div className="text-xs text-gray-500">People Helped</div>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-100">
-               <div className="text-blue-500 mb-1"><Star className="w-6 h-6 mx-auto"/></div>
-               <div className="text-2xl font-bold text-gray-900">{currentUser.stats.received}</div>
-               <div className="text-xs text-gray-500">Items Received</div>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-100">
-               <div className="text-orange-500 mb-1"><Filter className="w-6 h-6 mx-auto"/></div>
-               <div className="text-2xl font-bold text-gray-900">{currentUser.stats.wasteReduced} lbs</div>
-               <div className="text-xs text-gray-500">Waste Reduced</div>
-            </div>
+            <StatsCard icon={Leaf} value={currentUser.stats.shared} label="Items Shared" color="text-green-600" />
+            <StatsCard icon={ThumbsUp} value={currentUser.stats.helped} label="People Helped" color="text-red-500" />
+            <StatsCard icon={Star} value={currentUser.stats.received} label="Items Received" color="text-blue-500" />
+            <StatsCard icon={Filter} value={`${currentUser.stats.wasteReduced} lbs`} label="Waste Reduced" color="text-orange-500" />
          </div>
       </div>
 
@@ -131,43 +117,7 @@ export const Profile = () => {
            ) : (
              <div className="space-y-4">
                {displayItems.map(item => (
-                 <div key={item.id} className="flex gap-4 p-4 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors">
-                    <img src={item.image} alt={item.title} className="w-24 h-24 rounded-lg object-cover bg-gray-100" />
-                    <div className="flex-1">
-                       <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-bold text-gray-900">{item.title}</h3>
-                            <p className="text-xs text-gray-500 mb-2">{item.quantity} • Posted {item.status === ItemStatus.DONATED ? 'Oct 20' : 'Today'}</p>
-                          </div>
-                          <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${
-                            item.status === 'available' ? 'bg-green-100 text-green-700' : 
-                            item.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                            item.status === 'claimed' ? 'bg-blue-100 text-blue-700' :
-                            'bg-gray-100 text-gray-600'
-                          }`}>{item.status}</span>
-                       </div>
-                       
-                       <div className="mt-2 flex items-center justify-between">
-                          <div className="text-xs text-gray-500">
-                             {item.status === ItemStatus.PENDING && activeTab === 'posted' && "Claimed by James • Awaiting Pickup"}
-                             {item.status === ItemStatus.PENDING && activeTab === 'received' && "Claimed from Mike • Pickup Tomorrow"}
-                             {item.status === ItemStatus.CLAIMED && "Pickup Complete • Feedback Pending"}
-                          </div>
-                          
-                          {activeTab === 'posted' && (
-                            <div className="flex gap-2">
-                               <Button variant="outline" size="sm" onClick={() => navigate(`/edit/${item.id}`)}>Edit</Button>
-                               {item.status === ItemStatus.PENDING && (
-                                 <Button variant="primary" size="sm" onClick={() => window.location.hash = '#/messages'}>View Chat</Button>
-                               )}
-                            </div>
-                          )}
-                          {activeTab === 'received' && item.status === ItemStatus.CLAIMED && (
-                             <Button variant="primary" size="sm" onClick={() => window.location.hash = '#/messages'}>Leave Feedback</Button>
-                          )}
-                       </div>
-                    </div>
-                 </div>
+                 <ProfileItemCard key={item.id} item={item} activeTab={activeTab} />
                ))}
              </div>
            )}

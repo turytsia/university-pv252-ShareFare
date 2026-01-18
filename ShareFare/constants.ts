@@ -1,5 +1,7 @@
 import { User, Item, ItemStatus, Conversation, Message, DietaryType } from './types';
 
+import { getOffsetDate } from './utils'
+
 export const CURRENT_USER_ID = 'u1';
 
 export const MOCK_USERS: Record<string, User> = {
@@ -56,7 +58,7 @@ export const INITIAL_ITEMS: Item[] = [
     title: 'Fresh Tomatoes & Cucumbers',
     description: '2 lbs tomatoes, 3 cucumbers. Fresh from my garden!',
     quantity: '1 bag',
-    expiryDate: 'Nov 7',
+    expiryDate: getOffsetDate(7),
     pickupTime: 'Today 4-7pm',
     category: 'Produce',
     image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80',
@@ -73,10 +75,10 @@ export const INITIAL_ITEMS: Item[] = [
     title: 'Homemade Banana Bread',
     description: '1 full loaf. Baked yesterday.',
     quantity: '1 loaf',
-    expiryDate: 'Nov 6',
+    expiryDate: getOffsetDate(3),
     pickupTime: 'Tomorrow 9am-12pm',
     category: 'Baked Goods',
-    image: 'https://images.unsplash.com/photo-1596229562725-d9103c814b7e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1632931057819-4eefffa8e007?auto=format&fit=crop&w=800&q=80',
     ownerId: 'u2', // Mike
     claimedById: 'u1', // ME
     status: ItemStatus.CLAIMED, // CHANGED from PENDING
@@ -90,7 +92,7 @@ export const INITIAL_ITEMS: Item[] = [
     title: 'Milk & Yogurt (unopened)',
     description: '1 gallon milk, 4 yogurt cups. Moving out, need gone.',
     quantity: 'Mixed',
-    expiryDate: 'Nov 8',
+    expiryDate: getOffsetDate(10),
     pickupTime: 'Today 5-8pm',
     category: 'Dairy',
     image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80',
@@ -106,7 +108,7 @@ export const INITIAL_ITEMS: Item[] = [
     title: 'Pasta & Canned Goods',
     description: 'Unopened box of penne and 2 cans of beans.',
     quantity: '3 items',
-    expiryDate: 'Dec 2024',
+    expiryDate: getOffsetDate(365),
     pickupTime: 'Flexible',
     category: 'Pantry',
     image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=800&q=80',
@@ -122,7 +124,7 @@ export const INITIAL_ITEMS: Item[] = [
     title: 'Rice (5lb bag)',
     description: 'Unopened basmati rice.',
     quantity: '5 lbs',
-    expiryDate: 'Jan 2025',
+    expiryDate: getOffsetDate(730),
     pickupTime: 'Today 6-9pm',
     category: 'Pantry',
     image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80',
@@ -132,6 +134,22 @@ export const INITIAL_ITEMS: Item[] = [
     tags: [DietaryType.VEGAN, DietaryType.GLUTEN_FREE],
     locationName: 'Albany, CA',
     completionRate: 78,
+  },
+  {
+    id: 'i6',
+    title: 'Expired Bread Loaf',
+    description: 'A loaf of bread that expired yesterday. Still edible but needs to go quickly.',
+    quantity: '1 loaf',
+    expiryDate: getOffsetDate(-1),
+    pickupTime: 'Today 2-5pm',
+    category: 'Baked Goods',
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80',
+    ownerId: 'u2',
+    status: ItemStatus.AVAILABLE,
+    distance: 0.6,
+    tags: [DietaryType.VEGETARIAN],
+    locationName: 'North Berkeley, CA',
+    completionRate: 90,
   }
 ];
 

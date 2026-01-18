@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Send, MessageSquare } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { Button } from '../components/Button';
@@ -7,13 +7,23 @@ import { ItemStatus } from '../types';
 import { SurveyModal } from '../components/SurveyModal';
 
 export const Messages = () => {
-  const { conversations, users, items, messages, sendMessage, currentUser, markAsDonated, markAsReceived, markAsRead } = useAppContext();
+  const { 
+    conversations, users, items, 
+    messages, sendMessage, 
+    currentUser, 
+    markAsDonated, markAsReceived, markAsRead } = useAppContext();
   const navigate = useNavigate();
-  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  const { conversationId } = useParams();
+
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(conversationId != undefined ? conversationId : null );
   const [newMessage, setNewMessage] = useState('');
   const [showSurveyModal, setShowSurveyModal] = useState(false);
 
-  const myConversations = conversations.filter(c => c.participants.includes(currentUser?.id || '')).sort((a,b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
+  const myConversations = conversations.filter(
+    c => c.participants.includes(currentUser?.id || '')
+  ).sort(
+    (a,b) => b.lastMessageTimestamp - a.lastMessageTimestamp
+  );
   
   const activeConversation = conversations.find(c => c.id === selectedConversationId);
   const activeItem = activeConversation ? items.find(i => i.id === activeConversation.itemId) : null;

@@ -12,6 +12,7 @@ export const AddItem = () => {
   const isEditing = !!id;
 
   const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -73,6 +74,38 @@ export const AddItem = () => {
     }));
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.match('image/(jpeg|jpg|png)')) {
+      alert('Please select a valid image file (PNG, JPG)');
+      return;
+    }
+
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File size must be less than 10MB');
+      return;
+    }
+
+    setSelectedFile(file);
+
+    // Convert to base64 for preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setFormData(prev => ({ ...prev, image: result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handlePhotoClick = () => {
+    const input = document.getElementById('photo-input') as HTMLInputElement;
+    input?.click();
+  };
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex items-center gap-2 mb-6">
@@ -87,19 +120,26 @@ export const AddItem = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Photo *</label>
           {formData.image ? (
-              <div className="relative h-48 rounded-xl overflow-hidden mb-2 group">
+              <div className="relative h-48 rounded-xl overflow-hidden mb-2 group" onClick={handlePhotoClick}>
                  <img src={formData.image} className="w-full h-full object-cover" />
                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                     <span className="text-white font-medium">Change Photo</span>
                  </div>
               </div>
           ) : (
-             <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer transition-colors">
+             <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 cursor-pointer transition-colors" onClick={handlePhotoClick}>
                 <Camera className="w-8 h-8 mb-2 text-gray-400" />
                 <span className="text-sm font-medium">Click to upload food photo</span>
                 <span className="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</span>
              </div>
           )}
+          <input
+            id="photo-input"
+            type="file"
+            accept="image/jpeg,image/jpg,image/png"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
         </div>
 
         <div>
