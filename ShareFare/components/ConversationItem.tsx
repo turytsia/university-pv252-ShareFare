@@ -41,7 +41,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
                {new Date(conv.lastMessageTimestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
             </span>
           </div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex justify-between items-center mb-1">
             <img src={item.image} className="w-4 h-4 rounded object-cover" />
             <span className="text-xs font-medium text-gray-700 truncate">{item.title}</span>
             <span className={`text-[10px] px-1.5 rounded-full ${item.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
