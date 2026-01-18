@@ -19,6 +19,7 @@ interface AppContextType {
   addItem: (item: Omit<Item, 'id' | 'ownerId' | 'status' | 'distance' | 'completionRate'>) => void;
   updateItem: (id: string, data: Partial<Item>) => void;
   claimItem: (itemId: string) => void;
+  contactOwner: (itemId: string) => void;
   markAsDonated: (itemId: string, rating: number, feedback: string) => void;
   markAsReceived: (itemId: string, rating: number, feedback: string) => void;
   sendMessage: (conversationId: string, text: string) => void;
@@ -63,7 +64,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setItems(items.map(i => i.id === id ? { ...i, ...data } : i));
   };
 
-  const claimItem = (itemId: string) => {
+  const claimItem = (itemId: string): string => {
     if (!currentUser) return;
     const item = items.find(i => i.id === itemId);
     if (!item) return;
@@ -88,6 +89,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       unreadCount: 0
     };
     setConversations([newConv, ...conversations]);
+    return msg.conversationId;
+  };
+
+  const contactOwner = (itemId: string): string => {
+    if (!currentUser) return;
+    const item = items.find(i => i.id === itemId);
+    if (!item) return;
+
+    updateItem(itemId, { status: ItemStatus.PENDING, claimedById: currentUser.id });
+
+    const msg: Message = {
+      id: `m${Date.now()}`,
+      conversationId: `c${Date.now()}`,
+      senderId: currentUser.id,
+      text: 'Hello, I have a question about this item',
+      timestamp: Date.now()
+    };
+    setMessages([...messages, msg]);
+
+    const newConv: Conversation = {
+      id: msg.conversationId,
+      itemId,
+      participants: [item.ownerId, currentUser.id],
+      lastMessageId: msg.id,
+      lastMessageTimestamp: Date.now(),
+      unreadCount: 0
+    };
+    setConversations([newConv, ...conversations]);
+    return msg.conversationId;
   };
 
   const sendMessage = (conversationId: string, text: string) => {
@@ -120,7 +150,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider value={{ 
       currentUser, items, users: MOCK_USERS, conversations, messages, 
-      login, logout, addItem, updateItem, claimItem, sendMessage,
+      login, logout, addItem, updateItem, claimItem, contactOwner, sendMessage,
       markAsDonated, markAsReceived, markAsRead
     }}>
       {children}

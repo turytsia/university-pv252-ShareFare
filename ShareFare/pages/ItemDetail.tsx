@@ -3,20 +3,25 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Clock, MapPin, CheckCircle } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { Button } from '../components/Button';
-import { ItemStatus } from '../types';
+import { ItemStatus, Conversation } from '../types';
 
 export const ItemDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { items, users, claimItem, currentUser } = useAppContext();
+  const { items, users, conversations, claimItem, contactOwner, currentUser } = useAppContext();
   
   const item = items.find(i => i.id === id);
   if (!item) return <div>Item not found</div>;
   const owner = users[item.ownerId];
 
   const handleClaim = () => {
-    claimItem(item.id);
-    navigate('/messages');
+    const convId = claimItem(item.id);
+    navigate(`/messages/${convId}`)
+  };
+
+  const handleContactOwner = () => {
+    const convId = contactOwner(item.id);
+    navigate(`/messages/${convId}`)
   };
 
   return (
@@ -64,22 +69,24 @@ export const ItemDetail = () => {
 
         <div className="border-t border-gray-100 pt-6">
           <div className="flex items-center justify-between mb-6">
-             <div className="flex items-center gap-3">
-                <img src={owner.avatar} className="w-12 h-12 rounded-full" alt={owner.name} />
-                <div>
-                  <p className="font-medium text-gray-900 flex items-center gap-1">
-                    {owner.name} {owner.verified && <span className="text-xs text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">Verified</span>}
-                  </p>
-                  <p className="text-sm text-gray-500 flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-500" /> {item.completionRate || 95}% completion
-                    <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                    <span className="text-xs">Responds ~20 min</span>
-                  </p>
-                </div>
-             </div>
-             {item.ownerId !== currentUser?.id && (
-               <Button variant="outline">Contact</Button>
-             )}
+            <div className="flex items-center gap-3">
+              <img src={owner.avatar} className="w-12 h-12 rounded-full" alt={owner.name} />
+              <div>
+                <p className="font-medium text-gray-900 flex items-center gap-1">
+                  {owner.name} {owner.verified && <span className="text-xs text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">Verified</span>}
+                </p>
+                <p className="text-sm text-gray-500 flex items-center gap-2">
+                  <CheckCircle className="w-3 h-3 text-green-500" /> {item.completionRate || 95}% completion
+                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                  <span className="text-xs">Responds ~20 min</span>
+                </p>
+              </div>
+            </div>
+            {item.ownerId !== currentUser?.id && (
+              <Button variant="outline" onClick={handleContactOwner}>
+                Contact
+              </Button>
+            )}
           </div>
           
           {item.ownerId === currentUser?.id ? (

@@ -18,13 +18,10 @@ export const ProfileItemCard: React.FC<ProfileItemCardProps> = ({ item, activeTa
   const viewChatStr = "View Chat"
   const leaveFeedbackStr = "Leave Feedback"
 
-  const getConversationByItemId = (itemId: string) => {
-    const conv = conversations.find((conv: Conversation) => 
+  const getConversationByItemId = (itemId: string) => 
+    conversations.find((conv: Conversation) => 
       conv.itemId === itemId
-   );
-    return conv.id;
-  }
-
+    ).id
   
   const goToConversationButton = (buttonText: string) =>  {
     return <Button 
@@ -33,10 +30,6 @@ export const ProfileItemCard: React.FC<ProfileItemCardProps> = ({ item, activeTa
         { buttonText }
       </Button>
   }
-
-  // const getClaimedByUserName = () => {
-  //   return 
-  // }
 
   return (
     <div className="flex gap-4 p-4 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors">

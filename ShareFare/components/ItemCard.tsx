@@ -72,7 +72,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, owner, isOwner }) => {
           {isOwner ? (
              <Button variant="outline" size="sm" onClick={() => navigate(`/item/${item.id}`)}>View</Button>
           ) : (
-             <Button size="sm" onClick={() => navigate(`/item/${item.id}`)}>Claim Item</Button>
+             <Button size="sm" onClick={() => navigate(`/item/${item.id}`)}>View Item</Button>
           )}
         </div>
       </div>
