@@ -74,7 +74,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `c${Date.now()}`,
       itemId,
       participants: [item.ownerId, currentUser.id],
-      lastMessage: 'Hi! Is this still available?',
+      lastMessage: 'Hi! Is this still available?', // TODO: use last message ID instead
       lastMessageTimestamp: Date.now(),
       unreadCount: 0
     };

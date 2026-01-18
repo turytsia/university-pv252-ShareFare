@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Send, MessageSquare } from 'lucide-react';
+import { ChevronLeft, Send, MessageSquare, ChevronDown } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { Button } from '../components/Button';
 import { ItemStatus } from '../types';
 import { SurveyModal } from '../components/SurveyModal';
+import { ConversationItem } from '../components/ConversationItem';
 
 export const Messages = () => {
   const { 
@@ -18,12 +19,28 @@ export const Messages = () => {
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(conversationId != undefined ? conversationId : null );
   const [newMessage, setNewMessage] = useState('');
   const [showSurveyModal, setShowSurveyModal] = useState(false);
+  const [sortMode, setSortMode] = useState<string>(true);
 
   const myConversations = conversations.filter(
     c => c.participants.includes(currentUser?.id || '')
-  ).sort(
-    (a,b) => b.lastMessageTimestamp - a.lastMessageTimestamp
-  );
+  ).sort((a, b) => {
+    const itemA = items.find(i => i.id === a.itemId);
+    const itemB = items.find(i => i.id === b.itemId);
+    const isMyItemA = itemA?.ownerId === currentUser?.id;
+    const isMyItemB = itemB?.ownerId === currentUser?.id;
+
+    // Primary sort: my items first or last based on sortMyItemsFirst
+    if (sortMode == 'first') {
+      if (isMyItemA && !isMyItemB) return -1;
+      if (!isMyItemA && isMyItemB) return 1;
+    } else if (sortMode == 'last') {
+      if (isMyItemA && !isMyItemB) return 1;
+      if (!isMyItemA && isMyItemB) return -1;
+    }
+
+    // Secondary sort: by last message timestamp (newest first)
+    return b.lastMessageTimestamp - a.lastMessageTimestamp;
+  });
   
   const activeConversation = conversations.find(c => c.id === selectedConversationId);
   const activeItem = activeConversation ? items.find(i => i.id === activeConversation.itemId) : null;
@@ -78,7 +95,18 @@ export const Messages = () => {
     <div className="h-[calc(100vh-140px)] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex">
       <div className={`w-full md:w-1/3 border-r border-gray-200 flex flex-col ${selectedConversationId ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-4 border-b border-gray-200">
-          <h2 className="font-bold text-lg">Messages</h2>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="font-bold text-lg">Messages</h2>
+            <select
+              value={sortMode}
+              onChange={(e) => setSortMode(e.target.value)}
+              className="text-xs px-2 py-1 border border-gray-300 rounded bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            >
+              <option value="date">Most recent first</option>
+              <option value="first">My items first</option>
+              <option value="last">My items last</option>
+            </select>
+          </div>
           <p className="text-xs text-gray-500">{myConversations.filter(c => c.unreadCount > 0).length} unread</p>
         </div>
         <div className="flex-1 overflow-y-auto">
@@ -90,38 +118,15 @@ export const Messages = () => {
             if (!item || !other) return null;
 
             return (
-              <div 
-                key={conv.id} 
+              <ConversationItem
+                key={conv.id}
+                conversation={conv}
+                item={item}
+                otherUser={other}
+                currentUserId={currentUser?.id || ''}
+                isSelected={selectedConversationId === conv.id}
                 onClick={() => setSelectedConversationId(conv.id)}
-                className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${selectedConversationId === conv.id ? 'bg-primary-50 border-primary-100' : ''}`}
-              >
-                <div className="flex gap-3">
-                  <img src={other.avatar} alt={other.name} className="w-10 h-10 rounded-full" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start mb-0.5">
-                      <h3 className={`font-semibold text-sm truncate ${conv.unreadCount > 0 ? 'text-gray-900 font-bold' : 'text-gray-700'}`}>{other.name}</h3>
-                      <span className="text-[10px] text-gray-400 whitespace-nowrap">
-                         {new Date(conv.lastMessageTimestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <img src={item.image} className="w-4 h-4 rounded object-cover" />
-                      <span className="text-xs font-medium text-gray-700 truncate">{item.title}</span>
-                      <span className={`text-[10px] px-1.5 rounded-full ${item.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                        {item.status}
-                      </span>
-                    </div>
-                    <p className={`text-sm truncate ${conv.unreadCount > 0 ? 'font-bold text-gray-900' : 'text-gray-500'}`}>
-                      {conv.lastMessage}
-                    </p>
-                  </div>
-                  {conv.unreadCount > 0 && (
-                    <div className="flex flex-col justify-center">
-                       <span className="w-2.5 h-2.5 bg-primary-600 rounded-full"></span>
-                    </div>
-                  )}
-                </div>
-              </div>
+              />
             );
           })}
         </div>

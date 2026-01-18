@@ -62,7 +62,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, owner, isOwner }) => {
             <img src={owner.avatar} alt={owner.name} className="w-8 h-8 rounded-full" />
             <div>
               <p className="text-xs font-medium text-gray-900 flex items-center gap-1">
-                {owner.name} {owner.verified && <CheckCircle className="w-3 h-3 text-blue-500" />}
+                {owner.name} {owner.verified && <span title="This user identity is verified"><CheckCircle className="w-3 h-3 text-blue-500" /></span>}
               </p>
               <p className="text-[10px] text-gray-500 flex items-center gap-1">
                 <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" /> {item.completionRate}% completion

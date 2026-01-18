@@ -15,6 +15,12 @@ export enum DietaryType {
   DAIRY = 'Dairy',
 }
 
+export enum ProfileTab {
+  POSTED = 'posted',
+  RECEIVED = 'received',
+  DONATED = 'donated'
+}
+
 export interface User {
   id: string;
   name: string;

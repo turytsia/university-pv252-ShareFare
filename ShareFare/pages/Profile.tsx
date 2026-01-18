@@ -7,12 +7,12 @@ import { useAppContext } from '../context/AppContext';
 import { Button } from '../components/Button';
 import { StatsCard } from '../components/StatsCard';
 import { ProfileItemCard } from '../components/ProfileItemCard';
-import { ItemStatus } from '../types';
+import { ItemStatus, ProfileTab } from '../types';
 
 export const Profile = () => {
   const { currentUser, items } = useAppContext();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'posted' | 'received' | 'donated'>('posted');
+  const [activeTab, setActiveTab] = useState<ProfileTab>(ProfileTab.POSTED);
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(currentUser?.name || '');
   const [editBio, setEditBio] = useState('Student passionate about reducing food waste!');
@@ -25,11 +25,11 @@ export const Profile = () => {
 
   const getFilteredItems = () => {
     switch(activeTab) {
-      case 'posted':
+      case ProfileTab.POSTED:
         return items.filter(i => i.ownerId === currentUser.id && (i.status === ItemStatus.AVAILABLE || i.status === ItemStatus.PENDING));
-      case 'received':
+      case ProfileTab.RECEIVED:
         return items.filter(i => i.claimedById === currentUser.id && (i.status === ItemStatus.RECEIVED || i.status === ItemStatus.CLAIMED || i.status === ItemStatus.PENDING));
-      case 'donated':
+      case ProfileTab.DONATED:
         return items.filter(i => i.ownerId === currentUser.id && i.status === ItemStatus.DONATED);
       default: return [];
     }
@@ -95,10 +95,10 @@ export const Profile = () => {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden min-h-[400px]">
         <div className="flex border-b border-gray-200">
-           {['posted', 'received', 'donated'].map((tab) => (
+           {[ProfileTab.POSTED, ProfileTab.RECEIVED, ProfileTab.DONATED].map((tab) => (
              <button
                key={tab}
-               onClick={() => setActiveTab(tab as any)}
+               onClick={() => setActiveTab(tab)}
                className={`flex-1 py-4 text-sm font-medium border-b-2 capitalize transition-colors ${
                  activeTab === tab ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'
                }`}
@@ -112,7 +112,7 @@ export const Profile = () => {
            {displayItems.length === 0 ? (
              <div className="text-center py-10 text-gray-400">
                 <p>No items found in this category.</p>
-                {activeTab === 'posted' && <Button className="mt-4" onClick={() => window.location.hash = '#/add'}>Post an Item</Button>}
+                {activeTab === ProfileTab.POSTED && <Button className="mt-4" onClick={() => window.location.hash = '#/add'}>Post an Item</Button>}
              </div>
            ) : (
              <div className="space-y-4">

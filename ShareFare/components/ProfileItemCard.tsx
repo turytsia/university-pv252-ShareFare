@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Item, ItemStatus, Conversation } from '../types';
+import { Item, ItemStatus, User, Conversation, ProfileTab } from '../types';
 import { Button } from './Button';
 
 import { useAppContext } from '../context/AppContext';
@@ -8,26 +8,24 @@ import { useAppContext } from '../context/AppContext';
 
 interface ProfileItemCardProps {
   item: Item;
-  activeTab: 'posted' | 'received' | 'donated';
+  activeTab: ProfileTab;
 }
 
 export const ProfileItemCard: React.FC<ProfileItemCardProps> = ({ item, activeTab }) => {
-  const { 
-    conversations, users, items, 
-    messages, sendMessage, 
-    currentUser, 
-    markAsDonated, markAsReceived, markAsRead } = useAppContext();
+  const { users, conversations } = useAppContext();
   const navigate = useNavigate();
+
+  const viewChatStr = "View Chat"
+  const leaveFeedbackStr = "Leave Feedback"
 
   const getConversationByItemId = (itemId: string) => {
     const conv = conversations.find((conv: Conversation) => 
-      //console.log("Inside find conv.itemid: ", conv.itemId)
       conv.itemId === itemId
    );
-    //console.log("Conv ID for Item ID: ", convId, "for ", itemId);
     return conv.id;
   }
 
+  
   const goToConversationButton = (buttonText: string) =>  {
     return <Button 
       variant="primary" size="sm" 
@@ -35,6 +33,10 @@ export const ProfileItemCard: React.FC<ProfileItemCardProps> = ({ item, activeTa
         { buttonText }
       </Button>
   }
+
+  // const getClaimedByUserName = () => {
+  //   return 
+  // }
 
   return (
     <div className="flex gap-4 p-4 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors">
@@ -55,22 +57,21 @@ export const ProfileItemCard: React.FC<ProfileItemCardProps> = ({ item, activeTa
 
         <div className="mt-2 flex items-center justify-between">
           <div className="text-xs text-gray-500">
-            {item.status === ItemStatus.PENDING && activeTab === 'posted' && "Reserved by James • Awaiting Pickup"}
-            {item.status === ItemStatus.PENDING && activeTab === 'received' && "Reserved by You • Pickup Tomorrow"}
+            {item.status === ItemStatus.PENDING && activeTab === ProfileTab.POSTED && `Reserved by ${users[item.claimedById]?.name || "Someone"} • Awaiting Pickup`}
+            {item.status === ItemStatus.PENDING && activeTab === ProfileTab.RECEIVED && "Reserved by You • Pickup Tomorrow"}
             {item.status === ItemStatus.CLAIMED && "Pickup Complete • Feedback Pending"}
           </div>
 
-          {activeTab === 'posted' && (
+          {activeTab === ProfileTab.POSTED && item.status !== ItemStatus.DONATED && (
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => navigate(`/edit/${item.id}`)}>Edit</Button>
-              {item.status === ItemStatus.PENDING && (
-                goToConversationButton("View Chat")
-                // <Button variant="primary" size="sm" onClick={() => window.location.hash = `#/messages/${getConversationByItemId(item.id)}`}>View Chat</Button>
-              )}
+              { goToConversationButton(viewChatStr) }
             </div>
           )}
-          {activeTab === 'received' && item.status === ItemStatus.CLAIMED && (
-            goToConversationButton("Leave Feedback")
+          {activeTab === ProfileTab.RECEIVED && (
+            goToConversationButton(
+              item.status === ItemStatus.CLAIMED ? leaveFeedbackStr : viewChatStr
+            )
           )}
         </div>
       </div>

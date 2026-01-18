@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { MapPin, Search, Filter } from 'lucide-react';
+import { MapPin, Search, Filter, Calendar } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { ItemCard } from '../components/ItemCard';
 import { FilterPanel } from '../components/FilterPanel';
 import { ItemStatus } from '../types';
+import { isExpired } from '../utils';
 
 export const Home = () => {
   const { items, users, currentUser } = useAppContext();
@@ -15,6 +16,8 @@ export const Home = () => {
   const [dietary, setDietary] = useState<string[]>([]);
   const [pickupTime, setPickupTime] = useState('any');
   const [onlyVerified, setOnlyVerified] = useState(false);
+  const [showMyItems, setShowMyItems] = useState(true);
+  const [showExpired, setShowExpired] = useState(false);
 
   const filteredItems = useMemo(() => {
     return items.filter(item => {
@@ -22,6 +25,10 @@ export const Home = () => {
       const isMyPending = item.status === ItemStatus.PENDING && item.ownerId === currentUser?.id;
 
       if (!isAvailable && !isMyPending) return false;
+
+      if (!showMyItems && item.ownerId === currentUser?.id) return false;
+
+      if (!showExpired && isExpired(item.expiryDate)) return false;
 
       if (searchTerm && !item.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       if (categoryFilter !== 'All' && item.category !== categoryFilter) return false;
@@ -36,19 +43,25 @@ export const Home = () => {
         const hasAllTags = dietary.every(tag => item.tags.includes(tag));
         if (!hasAllTags) return false;
       }
-      
+
       return true;
     }).sort((a, b) => a.distance - b.distance);
-  }, [items, searchTerm, categoryFilter, maxDistance, dietary, currentUser, onlyVerified, users]);
+  }, [items, searchTerm, categoryFilter, maxDistance, dietary, currentUser, onlyVerified, users, showMyItems, showExpired]);
 
   const categories = ['All', 'Produce', 'Dairy', 'Prepared Food', 'Pantry', 'Baked Goods', 'Other'];
 
   return (
     <div>
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-        <MapPin className="w-4 h-4 text-primary-600" />
-        <span>{currentUser?.location}</span>
-        <button className="text-primary-600 font-medium hover:underline">Change</button>
+      <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-primary-600" />
+          <span>{currentUser?.location}</span>
+          <button className="text-primary-600 font-medium hover:underline">Change</button>
+        </div>
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-primary-600" />
+          <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        </div>
       </div>
 
       <div className="flex gap-2 mb-6">
@@ -70,18 +83,42 @@ export const Home = () => {
         </button>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setCategoryFilter(cat)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-              categoryFilter === cat ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+      <div className="flex items-center gap-4 mb-4">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide flex-1">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setCategoryFilter(cat)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                categoryFilter === cat ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-4 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showMyItems"
+              checked={showMyItems}
+              onChange={(e) => setShowMyItems(e.target.checked)}
+              className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2"
+            />
+            <label htmlFor="showMyItems" className="text-sm text-gray-700">Include my items</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="showExpired"
+              checked={showExpired}
+              onChange={(e) => setShowExpired(e.target.checked)}
+              className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2"
+            />
+            <label htmlFor="showExpired" className="text-sm text-gray-700">Show expired</label>
+          </div>
+        </div>
       </div>
 
       {showFilters && (
