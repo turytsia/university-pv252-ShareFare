@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Clock, Star, CheckCircle } from 'lucide-react';
 import { Item, User, ItemStatus } from '../types';
@@ -10,6 +10,27 @@ interface ItemCardProps {
   owner: User;
   isOwner: boolean;
 }
+
+const VerifiedTooltip: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    <div className="relative inline-block">
+      <div
+        onMouseEnter={() => setIsVisible(true)}
+        onMouseLeave={() => setIsVisible(false)}
+      >
+        {children}
+      </div>
+      {isVisible && (
+        <div className="absolute z-10 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-lg -top-12 left-1/2 transform -translate-x-1/2 whitespace-nowrap animate-in fade-in-0 zoom-in-95 duration-200">
+          ✓ This user identity is verified
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const ItemCard: React.FC<ItemCardProps> = ({ item, owner, isOwner }) => {
   const navigate = useNavigate();
@@ -62,7 +83,11 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, owner, isOwner }) => {
             <img src={owner.avatar} alt={owner.name} className="w-8 h-8 rounded-full" />
             <div>
               <p className="text-xs font-medium text-gray-900 flex items-center gap-1">
-                {owner.name} {owner.verified && <span title="This user identity is verified"><CheckCircle className="w-3 h-3 text-blue-500" /></span>}
+                {owner.name} {owner.verified && (
+                  <VerifiedTooltip>
+                    <CheckCircle className="w-3 h-3 text-blue-500" />
+                  </VerifiedTooltip>
+                )}
               </p>
               <p className="text-[10px] text-gray-500 flex items-center gap-1">
                 <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" /> {item.completionRate}% completion
