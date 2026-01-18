@@ -1,5 +1,6 @@
 import React from 'react';
 import { Conversation, Item, User } from '../types';
+import { useAppContext } from '../context/AppContext';
 
 interface ConversationItemProps {
   conversation: Conversation;
@@ -18,6 +19,9 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
   isSelected,
   onClick,
 }) => {
+  const { messages } = useAppContext();
+  const lastMessage = messages.find(msg => msg.id === conv.lastMessageId)?.text || '';
+
   return (
     <div
       onClick={onClick}
@@ -45,7 +49,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
             </span>
           </div>
           <p className={`text-sm truncate ${conv.unreadCount > 0 ? 'font-bold text-gray-900' : 'text-gray-500'}`}>
-            {conv.lastMessage}
+            {lastMessage}
           </p>
         </div>
         {conv.unreadCount > 0 && (

@@ -70,24 +70,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     updateItem(itemId, { status: ItemStatus.PENDING, claimedById: currentUser.id });
 
-    const newConv: Conversation = {
-      id: `c${Date.now()}`,
-      itemId,
-      participants: [item.ownerId, currentUser.id],
-      lastMessage: 'Hi! Is this still available?', // TODO: use last message ID instead
-      lastMessageTimestamp: Date.now(),
-      unreadCount: 0
-    };
-    setConversations([newConv, ...conversations]);
-
     const msg: Message = {
       id: `m${Date.now()}`,
-      conversationId: newConv.id,
+      conversationId: `c${Date.now()}`,
       senderId: currentUser.id,
       text: 'Hi! Is this still available?',
       timestamp: Date.now()
     };
     setMessages([...messages, msg]);
+
+    const newConv: Conversation = {
+      id: msg.conversationId,
+      itemId,
+      participants: [item.ownerId, currentUser.id],
+      lastMessageId: msg.id,
+      lastMessageTimestamp: Date.now(),
+      unreadCount: 0
+    };
+    setConversations([newConv, ...conversations]);
   };
 
   const sendMessage = (conversationId: string, text: string) => {
@@ -100,8 +100,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       timestamp: Date.now()
     };
     setMessages([...messages, msg]);
-    setConversations(conversations.map(c => 
-      c.id === conversationId ? { ...c, lastMessage: text, lastMessageTimestamp: Date.now() } : c
+    setConversations(conversations.map(c =>
+      c.id === conversationId ? { ...c, lastMessageId: msg.id, lastMessageTimestamp: Date.now() } : c
     ));
   };
 

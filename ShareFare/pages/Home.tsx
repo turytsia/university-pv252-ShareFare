@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { MapPin, Search, Filter, Calendar } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { ItemCard } from '../components/ItemCard';
@@ -6,9 +6,20 @@ import { FilterPanel } from '../components/FilterPanel';
 import { ItemStatus } from '../types';
 import { isExpired } from '../utils';
 
+const getInitialState = (key: string, defaultValue: boolean) => {
+  const saved = localStorage.getItem('homeFilters');
+  if (!saved) return defaultValue;
+  try {
+    const parsed = JSON.parse(saved);
+    return parsed[key] ?? defaultValue;
+  } catch {
+    return defaultValue;
+  }
+};
+
 export const Home = () => {
   const { items, users, currentUser } = useAppContext();
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
@@ -16,8 +27,17 @@ export const Home = () => {
   const [dietary, setDietary] = useState<string[]>([]);
   const [pickupTime, setPickupTime] = useState('any');
   const [onlyVerified, setOnlyVerified] = useState(false);
-  const [showMyItems, setShowMyItems] = useState(true);
-  const [showExpired, setShowExpired] = useState(false);
+  const [showMyItems, setShowMyItems] = useState(() => getInitialState('showMyItems', true));
+  const [showExpired, setShowExpired] = useState(() => getInitialState('showExpired', false));
+
+  // Save filter settings to localStorage whenever they change
+  useEffect(() => {
+    const filters = {
+      showMyItems,
+      showExpired
+    };
+    localStorage.setItem('homeFilters', JSON.stringify(filters));
+  }, [showMyItems, showExpired]);
 
   const filteredItems = useMemo(() => {
     return items.filter(item => {
@@ -46,7 +66,10 @@ export const Home = () => {
 
       return true;
     }).sort((a, b) => a.distance - b.distance);
-  }, [items, searchTerm, categoryFilter, maxDistance, dietary, currentUser, onlyVerified, users, showMyItems, showExpired]);
+  }, [items, searchTerm, categoryFilter, 
+    maxDistance, dietary, 
+    currentUser, onlyVerified, users, 
+    showMyItems, showExpired]);
 
   const categories = ['All', 'Produce', 'Dairy', 'Prepared Food', 'Pantry', 'Baked Goods', 'Other'];
 

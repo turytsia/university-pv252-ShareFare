@@ -68,7 +68,7 @@ export interface Conversation {
   id: string;
   itemId: string;
   participants: string[]; // [ownerId, claimerId]
-  lastMessage: string;
+  lastMessageId: string;
   lastMessageTimestamp: number;
   unreadCount: number;
 }

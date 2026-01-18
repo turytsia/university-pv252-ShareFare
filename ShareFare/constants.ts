@@ -158,7 +158,7 @@ export const INITIAL_CONVERSATIONS: Conversation[] = [
     id: 'c1',
     itemId: 'i1',
     participants: ['u1', 'u4'], // Me and James
-    lastMessage: 'Perfect! What time works for pickup?',
+    lastMessageId: 'm3',
     lastMessageTimestamp: Date.now() - 3600000,
     unreadCount: 2,
   },
@@ -166,7 +166,7 @@ export const INITIAL_CONVERSATIONS: Conversation[] = [
     id: 'c2',
     itemId: 'i2',
     participants: ['u2', 'u1'], // Mike and Me
-    lastMessage: 'See you then.',
+    lastMessageId: 'm7',
     lastMessageTimestamp: Date.now() - 7200000,
     unreadCount: 1, // Changed to 1 to simulate unread state for testing
   }
