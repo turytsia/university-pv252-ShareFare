@@ -73,6 +73,15 @@ export const Profile = () => {
                   <h1 className="text-xl font-bold text-gray-900">{editName}</h1>
                   {currentUser.verified && <CheckCircle className="w-5 h-5 text-blue-500" />}
                 </div>
+                <div className="flex items-center gap-1 mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`w-4 h-4 ${star <= 4 ? 'fill-yellow-400 text-yellow-400' : 'fill-yellow-400/50 text-yellow-400'}`}
+                    />
+                  ))}
+                  <span className="text-sm text-gray-600 ml-1">4.5</span>
+                </div>
                 <p className="text-gray-500 text-sm flex items-center gap-1"><MapPin className="w-3 h-3"/> {currentUser.location} • Member since Jan 2024</p>
                 <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                   <span className="flex items-center gap-1 text-green-600"><CheckCircle className="w-4 h-4"/> 98% completion</span>
