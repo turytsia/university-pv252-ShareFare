@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Item, User, Conversation, Message, ItemStatus } from '../types';
-import { 
-  INITIAL_ITEMS, 
-  MOCK_USERS, 
-  CURRENT_USER_ID, 
-  INITIAL_CONVERSATIONS, 
-  INITIAL_MESSAGES 
+import {
+  INITIAL_ITEMS,
+  MOCK_USERS,
+  CURRENT_USER_ID,
+  INITIAL_CONVERSATIONS,
+  INITIAL_MESSAGES
 } from '../constants';
 
 interface AppContextType {
@@ -24,6 +24,7 @@ interface AppContextType {
   markAsReceived: (itemId: string, rating: number, feedback: string) => void;
   sendMessage: (conversationId: string, text: string) => void;
   markAsRead: (conversationId: string) => void;
+  cancelClaim: (itemId: string) => void;
 }
 
 const AppContext = React.createContext<AppContextType | undefined>(undefined);
@@ -39,7 +40,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [items, setItems] = useState<Item[]>(INITIAL_ITEMS);
   const [conversations, setConversations] = useState<Conversation[]>(INITIAL_CONVERSATIONS);
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
-  
+
   const login = () => {
     setCurrentUser(MOCK_USERS[CURRENT_USER_ID]);
   };
@@ -71,6 +72,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     updateItem(itemId, { status: ItemStatus.PENDING, claimedById: currentUser.id });
 
+    // Check for existing conversation for this item with these participants
+    const existingConv = conversations.find(
+      c => c.itemId === itemId && c.participants.includes(currentUser.id) && c.participants.includes(item.ownerId)
+    );
+
+    if (existingConv) {
+      // Add system message to existing conversation
+      const systemMsg: Message = {
+        id: `m${Date.now()}`,
+        conversationId: existingConv.id,
+        senderId: 'system',
+        text: `${currentUser.name} has requested this item again.`,
+        timestamp: Date.now(),
+        isSystem: true
+      };
+      setMessages(prev => [...prev, systemMsg]);
+      setConversations(prev => prev.map(c =>
+        c.id === existingConv.id ? { ...c, lastMessageId: systemMsg.id, lastMessageTimestamp: Date.now() } : c
+      ));
+      return existingConv.id;
+    }
+
+    // Create new conversation
     const msg: Message = {
       id: `m${Date.now()}`,
       conversationId: `c${Date.now()}`,
@@ -78,7 +102,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       text: 'Hi! Is this still available?',
       timestamp: Date.now()
     };
-    setMessages([...messages, msg]);
+    setMessages(prev => [...prev, msg]);
 
     const newConv: Conversation = {
       id: msg.conversationId,
@@ -88,7 +112,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       lastMessageTimestamp: Date.now(),
       unreadCount: 0
     };
-    setConversations([newConv, ...conversations]);
+    setConversations(prev => [newConv, ...prev]);
     return msg.conversationId;
   };
 
@@ -99,6 +123,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     updateItem(itemId, { status: ItemStatus.PENDING, claimedById: currentUser.id });
 
+    // Check for existing conversation for this item with these participants
+    const existingConv = conversations.find(
+      c => c.itemId === itemId && c.participants.includes(currentUser.id) && c.participants.includes(item.ownerId)
+    );
+
+    if (existingConv) {
+      // Add system message to existing conversation
+      const systemMsg: Message = {
+        id: `m${Date.now()}`,
+        conversationId: existingConv.id,
+        senderId: 'system',
+        text: `${currentUser.name} has requested this item again.`,
+        timestamp: Date.now(),
+        isSystem: true
+      };
+      setMessages(prev => [...prev, systemMsg]);
+      setConversations(prev => prev.map(c =>
+        c.id === existingConv.id ? { ...c, lastMessageId: systemMsg.id, lastMessageTimestamp: Date.now() } : c
+      ));
+      return existingConv.id;
+    }
+
+    // Create new conversation
     const msg: Message = {
       id: `m${Date.now()}`,
       conversationId: `c${Date.now()}`,
@@ -106,7 +153,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       text: 'Hello, I have a question about this item',
       timestamp: Date.now()
     };
-    setMessages([...messages, msg]);
+    setMessages(prev => [...prev, msg]);
 
     const newConv: Conversation = {
       id: msg.conversationId,
@@ -116,7 +163,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       lastMessageTimestamp: Date.now(),
       unreadCount: 0
     };
-    setConversations([newConv, ...conversations]);
+    setConversations(prev => [newConv, ...prev]);
     return msg.conversationId;
   };
 
@@ -129,14 +176,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       text,
       timestamp: Date.now()
     };
-    setMessages([...messages, msg]);
-    setConversations(conversations.map(c =>
+    setMessages(prev => [...prev, msg]);
+    setConversations(prev => prev.map(c =>
       c.id === conversationId ? { ...c, lastMessageId: msg.id, lastMessageTimestamp: Date.now() } : c
     ));
   };
 
   const markAsRead = (conversationId: string) => {
-     setConversations(prev => prev.map(c => c.id === conversationId ? { ...c, unreadCount: 0 } : c));
+    setConversations(prev => prev.map(c => c.id === conversationId ? { ...c, unreadCount: 0 } : c));
   };
 
   const markAsDonated = (itemId: string, rating: number, feedback: string) => {
@@ -144,14 +191,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const markAsReceived = (itemId: string, rating: number, feedback: string) => {
-    updateItem(itemId, { status: ItemStatus.RECEIVED }); 
+    updateItem(itemId, { status: ItemStatus.RECEIVED });
+  };
+
+  const cancelClaim = (itemId: string) => {
+    if (!currentUser) return;
+    const item = items.find(i => i.id === itemId);
+    if (!item) return;
+
+    updateItem(itemId, { status: ItemStatus.AVAILABLE, claimedById: undefined });
+
+    // Find the conversation for this item and add a system message
+    const conv = conversations.find(
+      c => c.itemId === itemId && c.participants.includes(currentUser.id)
+    );
+
+    if (conv) {
+      const isOwner = item.ownerId === currentUser.id;
+      const systemMsg: Message = {
+        id: `m${Date.now()}`,
+        conversationId: conv.id,
+        senderId: 'system',
+        text: isOwner
+          ? `${currentUser.name} has returned this item to available.`
+          : `${currentUser.name} has canceled the request.`,
+        timestamp: Date.now(),
+        isSystem: true
+      };
+      setMessages(prev => [...prev, systemMsg]);
+      setConversations(prev => prev.map(c =>
+        c.id === conv.id ? { ...c, lastMessageId: systemMsg.id, lastMessageTimestamp: Date.now() } : c
+      ));
+    }
   };
 
   return (
-    <AppContext.Provider value={{ 
-      currentUser, items, users: MOCK_USERS, conversations, messages, 
+    <AppContext.Provider value={{
+      currentUser, items, users: MOCK_USERS, conversations, messages,
       login, logout, addItem, updateItem, claimItem, contactOwner, sendMessage,
-      markAsDonated, markAsReceived, markAsRead
+      markAsDonated, markAsReceived, markAsRead, cancelClaim
     }}>
       {children}
     </AppContext.Provider>

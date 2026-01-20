@@ -19,7 +19,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const {
     conversations, users, items, messages,
     sendMessage, currentUser,
-    markAsDonated, markAsReceived, markAsRead
+    markAsDonated, markAsReceived, markAsRead, cancelClaim
   } = useAppContext();
   const navigate = useNavigate();
 
@@ -102,7 +102,15 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </button>
         </div>
-        <Button variant="outline" size="sm" onClick={() => navigate(`/item/${activeItem.id}`)}>View Item</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => navigate(`/item/${activeItem.id}`)}>View Item</Button>
+          {activeItem.status === ItemStatus.PENDING && activeItem.ownerId === currentUser?.id && (
+            <Button variant="outline" size="sm" onClick={() => cancelClaim(activeItem.id)}>Return to Available</Button>
+          )}
+          {activeItem.status === ItemStatus.PENDING && activeItem.claimedById === currentUser?.id && (
+            <Button variant="outline" size="sm" onClick={() => cancelClaim(activeItem.id)}>Cancel Request</Button>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
@@ -116,6 +124,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         {conversationMessages.map(msg => {
           const isMe = msg.senderId === currentUser?.id;
+          const isSystem = msg.isSystem;
+
+          if (isSystem) {
+            return (
+              <div key={msg.id} className="flex justify-center">
+                <div className="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full italic">
+                  {msg.text}
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
               {!isMe && <img src={otherParticipant.avatar} className="w-8 h-8 rounded-full mr-2 self-end" />}
